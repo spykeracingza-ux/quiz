@@ -24,7 +24,18 @@ local TIME = { kids = 40, juniors = 30, teens = 25, adults = 20 }
 local GRACE = 3 -- seconds of network allowance on the timer
 local EPOCH = 1794787200 -- 2026-11-16 00:00 UTC = round #1
 
-local profileStore = DataStoreService:GetDataStore("BrainwaveProfiles_v1")
+-- DataStores only work once the place is published. Until then (or if they're
+-- down) the game keeps profiles and leaderboards in memory so it still plays.
+local profileStore = nil
+do
+	local ok, store = pcall(function() return DataStoreService:GetDataStore("BrainwaveProfiles_v1") end)
+	if ok then
+		profileStore = store
+	else
+		warn("[Brainwave] Saving is off: publish the place (and in Studio enable API Services) to keep scores. Using temporary memory for now.")
+	end
+end
+local memBoards = {} -- [boardName] = { [userId] = score } when DataStores are unavailable
 
 ---------------------------------------------------------------- dates
 local function today() return os.date("!%Y-%m-%d") end
@@ -176,6 +187,7 @@ end
 
 local function loadProfile(player)
 	local data
+	if not profileStore then return defaultProfile() end
 	for attempt = 1, 3 do
 		local ok, res = pcall(function() return profileStore:GetAsync("u" .. player.UserId) end)
 		if ok then data = res break end
@@ -190,7 +202,7 @@ end
 
 local function saveProfile(player)
 	local p = profiles[player]
-	if not p then return end
+	if not p or not profileStore then return end
 	pcall(function()
 		profileStore:SetAsync("u" .. player.UserId, p)
 	end)
@@ -232,9 +244,14 @@ local function writeBoards(player, score)
 	local t = today()
 	local age = profiles[player].age
 	for _, scope in ipairs({ age, "all" }) do
-		pcall(function()
-			DataStoreService:GetOrderedDataStore(boardName(t, scope)):SetAsync(tostring(player.UserId), score)
-		end)
+		local name = boardName(t, scope)
+		memBoards[name] = memBoards[name] or {}
+		memBoards[name][player.UserId] = score
+		if profileStore then
+			pcall(function()
+				DataStoreService:GetOrderedDataStore(name):SetAsync(tostring(player.UserId), score)
+			end)
+		end
 		boardCache[boardName(t, scope)] = nil
 	end
 end
@@ -253,6 +270,13 @@ local function readBoard(scope)
 	local cached = boardCache[name]
 	if cached and os.clock() - cached.at < 20 then return cached.rows end
 	local rows = {}
+	if not profileStore then
+		for uid, score in pairs(memBoards[name] or {}) do
+			table.insert(rows, { userId = uid, name = nameFor(uid), score = score })
+		end
+		table.sort(rows, function(a, b) return a.score > b.score end)
+		return rows
+	end
 	local ok = pcall(function()
 		local pages = DataStoreService:GetOrderedDataStore(name):GetSortedAsync(false, scope == "all" and 20 or 10)
 		for _, e in ipairs(pages:GetCurrentPage()) do
@@ -381,6 +405,7 @@ function handlers.resetToday(player)
 	sessions[player] = nil
 	task.spawn(saveProfile, player)
 	for _, scope in ipairs({ p.age or "all", "all" }) do
+		if memBoards[boardName(today(), scope)] then memBoards[boardName(today(), scope)][player.UserId] = nil end
 		pcall(function()
 			DataStoreService:GetOrderedDataStore(boardName(today(), scope)):RemoveAsync(tostring(player.UserId))
 		end)
