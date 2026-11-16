@@ -80,10 +80,11 @@ async function handleApi(req, env, url) {
 
   if (path === "/api/leaderboard") {
     const age = url.searchParams.get("age"), day = url.searchParams.get("day");
-    if (!AGES.includes(age) || !dayOk(day)) return bad("Bad request");
-    const { results } = await env.DB.prepare(
-      "SELECT * FROM players WHERE age = ? AND last_day = ? AND today_score IS NOT NULL ORDER BY today_score DESC LIMIT 10"
-    ).bind(age, day).all();
+    if ((age !== "all" && !AGES.includes(age)) || !dayOk(day)) return bad("Bad request");
+    const q = age === "all"
+      ? env.DB.prepare("SELECT * FROM players WHERE last_day = ? AND today_score IS NOT NULL ORDER BY today_score DESC LIMIT 20").bind(day)
+      : env.DB.prepare("SELECT * FROM players WHERE age = ? AND last_day = ? AND today_score IS NOT NULL ORDER BY today_score DESC LIMIT 10").bind(age, day);
+    const { results } = await q.all();
     return json({ rows: results.map(publicPlayer) });
   }
 

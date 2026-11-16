@@ -70,6 +70,10 @@ button{font-family:inherit;cursor:pointer;border:0}
 .note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
 .hidden{display:none!important}
 .row{display:flex;gap:10px}.row .btn{margin-top:12px}
+.timer{height:8px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:14px}
+.timer i{display:block;height:100%;background:var(--accent);transition:width 1s linear,background .3s}
+.timer.low i{background:#ff5d6c}
+.tleft{float:right;font-weight:600;color:var(--ink)}
 .hint{font-size:13px;color:var(--accent2);margin-top:10px;min-height:18px}
 @keyframes pop{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
 .pop{animation:pop .25s ease-out}
@@ -131,7 +135,10 @@ button{font-family:inherit;cursor:pointer;border:0}
       <div class="ages" id="ageGrid2"></div>
     </div>
     <div class="card">
-      <h3>Today's leaderboard</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <h3>Today's leaderboard</h3>
+        <div class="tabs" style="margin:0;min-width:190px"><button id="lbMine" class="on">My age</button><button id="lbAll">Everyone</button></div>
+      </div>
       <p class="muted small" id="lbSub" style="margin-top:2px"></p>
       <ul class="lb" id="lb" style="margin-top:10px"></ul>
     </div>
@@ -152,7 +159,8 @@ button{font-family:inherit;cursor:pointer;border:0}
   <section id="vGame" class="hidden">
     <div class="progress" id="gProg"></div>
     <div class="card">
-      <div class="muted small" id="gLabel"></div>
+      <div class="muted small"><span class="tleft" id="gTime"></span><span id="gLabel"></span></div>
+      <div class="timer" id="gBar"><i id="gBarFill"></i></div>
       <div class="prompt" id="gPrompt"></div>
       <form id="fAns" autocomplete="off">
         <input type="text" id="gInput" placeholder="Type your answer…" style="margin-top:14px">
@@ -247,10 +255,48 @@ adults:[
  {q:"Name a moon of Jupiter or Saturn",c:"Titan|Europa|Io|Ganymede",u:"Callisto|Enceladus",r:"Mimas|Rhea|Iapetus|Dione|Tethys|Hyperion|Phoebe|Amalthea|Himalia|Thebe|Metis|Pan|Janus|Epimetheus|Prometheus|Pandora|Atlas|Adrastea|Elara|Carme|Pasiphae|Sinope|Lysithea|Ananke|Leda"},
  {q:"Name a South African-born Nobel Prize winner",c:"Nelson Mandela/mandela|Desmond Tutu/tutu",u:"F. W. de Klerk/de klerk/fw de klerk|Albert Luthuli/luthuli/chief albert luthuli",r:"Nadine Gordimer/gordimer|J. M. Coetzee/coetzee/jm coetzee|Sydney Brenner/brenner|Allan Cormack/cormack|Max Theiler/theiler|Aaron Klug/klug|Michael Levitt/levitt"}
 ]};
+
+/* South Africa prompts: every daily round includes at least 3 of these */
+const SA_BANK = {
+kids:[
+ {q:"Name one of the Big Five",c:"Lion|Elephant",u:"Leopard|Rhino/rhinoceros",r:"Buffalo/cape buffalo"},
+ {q:"Name a colour on the South African flag",c:"Green|Yellow/gold|Black",u:"Red|Blue",r:"White"},
+ {q:"Name a South African food",c:"Boerewors/wors|Biltong|Pap|Bunny chow|Braai",u:"Koeksister/koesister|Bobotie|Potjiekos|Milk tart/melktert|Chakalaka|Vetkoek/amagwinya",r:"Malva pudding|Samoosa/samosa|Droëwors/droewors|Mogodu|Umngqusho/samp and beans|Sosatie|Amasi|Rusks/beskuit|Bredie|Morogo|Mopane worms|Slap chips|Gatsby|Kota|Chutney|Mealie bread"},
+ {q:"Name a big city in South Africa",c:"Johannesburg/joburg/jozi/jhb|Cape Town|Durban",u:"Pretoria/tshwane|Gqeberha/port elizabeth/pe|Bloemfontein/bloem|Soweto",r:"East London|Polokwane|Mbombela/nelspruit|Kimberley|Pietermaritzburg|Rustenburg|George|Stellenbosch|Mahikeng/mafikeng|Richards Bay|Welkom|Upington|Benoni|Centurion|Midrand|Sandton|Umhlanga|Ballito|Knysna|Paarl|Worcester|Vereeniging|Germiston|Boksburg|Krugersdorp/mogale city"},
+ {q:"Name a South African bird",c:"Ostrich|Hadeda|Fish eagle/african fish eagle/eagle",u:"Blue crane|Guinea fowl/guineafowl|Flamingo|Penguin/african penguin|Vulture",r:"Hornbill|Secretary bird|Sunbird|Weaver|Lourie/go-away bird/turaco|Sugarbird|Kingfisher|Hoopoe|Oxpecker|Bee-eater|Owl|Mousebird|Kori bustard|Crowned crane|Korhaan|Bokmakierie|Bulbul|Starling|Ibis|Pied crow|Hamerkop|Spoonbill"},
+ {q:"Name a South African sports team's nickname",c:"Springboks/bokke/boks|Bafana Bafana|Proteas",u:"Banyana Banyana|Blitzboks",r:"Amajita|Amajimbos|Baby Boks/junior springboks|Basetsana|Spar Proteas"}
+],
+juniors:[
+ {q:"Name an official language of South Africa",c:"English|Afrikaans|isiZulu/zulu",u:"isiXhosa/xhosa|Sesotho/sotho/southern sotho|Setswana/tswana|Sepedi/pedi/northern sotho|isiNdebele/ndebele",r:"Xitsonga/tsonga|Tshivenda/venda|siSwati/swati/swazi|South African Sign Language/sasl/sign language"},
+ {q:"Name an animal on a South African banknote",c:"Lion|Elephant",u:"Rhino/rhinoceros|Buffalo",r:"Leopard"},
+ {q:"Name a South African national symbol from nature",c:"Springbok|King protea/protea",u:"Blue crane|Galjoen",r:"Real yellowwood/yellowwood"},
+ {q:"Name a river in South Africa",c:"Orange/gariep|Vaal|Limpopo",u:"Tugela/thukela|Crocodile|Olifants",r:"Breede|Great Fish/fish|Great Kei/kei|Sundays|Gamtoos|Berg|Sabie|Komati|Mzimvubu|Umgeni/mgeni|Caledon|Gouritz|Letaba|Keiskamma|Buffalo|Bushmans|Luvuvhu|Molopo|Doring|Elands|Pongola|Umzimkulu|Mooi|Hex|Kowie|Swartkops"},
+ {q:"Name a famous South African sportsperson",c:"Siya Kolisi/kolisi|Wayde van Niekerk/van niekerk|Caster Semenya/semenya|Percy Tau",u:"Bryan Habana/habana|AB de Villiers/de villiers|Chad le Clos/le clos|Tatjana Smith/tatjana schoenmaker/schoenmaker|Kagiso Rabada/rabada|Akani Simbine/simbine|Lucas Radebe/radebe|Benni McCarthy/mccarthy|Faf de Klerk|Cheslin Kolbe/kolbe|Eben Etzebeth/etzebeth|Thembi Kgatlana/kgatlana|Temba Bavuma/bavuma|Ronwen Williams",r:"Ernie Els|Gary Player|Retief Goosen|Penny Heyns|Josia Thugwane|Natalie du Toit|Zola Budd|Jonty Rhodes|Shaun Pollock|Jacques Kallis/kallis|Hashim Amla/amla|Graeme Smith|Dale Steyn/steyn|Francois Pienaar/pienaar|Joost van der Westhuizen|Os du Randt|Doctor Khumalo|Jomo Sono|Steven Pienaar|Shaun Bartlett|Mark Fish|Kaizer Motaung|Kevin Anderson|Elana Meyer|Ryk Neethling|Roland Schoeman|Cameron van der Burgh|Sunette Viljoen|Quinton de Kock|Handré Pollard/handre pollard/pollard|Pieter-Steph du Toit|Trevor Immelman|Charl Schwartzel|Louis Oosthuizen|Lewis Pugh|Bruce Fordyce|Hezekiél Sepeng/sepeng|Mark Boucher|Makhaya Ntini/ntini|Bongi Mbonambi|Lukhanyo Am|Makazole Mapimpi/mapimpi|Rassie Erasmus"},
+ {q:"Name a South African mountain or mountain range",c:"Table Mountain|Drakensberg/ukhahlamba",u:"Magaliesberg|Lion's Head/lions head|Cederberg|Devil's Peak/devils peak",r:"Swartberg|Outeniqua|Soutpansberg|Waterberg|Langeberg|Amathole/amatola|Hottentots Holland|Maloti/maluti|Mont-aux-Sources|Champagne Castle|Matroosberg|Witteberg|Sneeuberg|Kompasberg|Hex River Mountains|Tsitsikamma|Wolkberg|Lebombo|Thabana Ntlenyana|Sentinel|Cathedral Peak|Giant's Castle/giants castle|Simonsberg|Helderberg|Signal Hill|Chapman's Peak/chapmans peak"},
+ {q:"Name one of South Africa's three capital cities",c:"Pretoria/tshwane|Cape Town",u:"Bloemfontein/bloem/mangaung",r:""}
+],
+teens:[
+ {q:"Name a South African musician or band",c:"Tyla|Black Coffee|Master KG|Nasty C|Cassper Nyovest",u:"Lucky Dube|Brenda Fassie|Miriam Makeba|Hugh Masekela|Johnny Clegg|Ladysmith Black Mambazo|Die Antwoord|Kabza De Small|DJ Maphorisa|AKA|Sho Madjozi|Zakes Bantwini|Freshlyground|Mafikizolo|Mango Groove|Prince Kaybee|Sjava|Uncle Waffles|Focalistic|Kamo Mphela",r:"Seether|Goldfish|Jeremy Loops|Mi Casa|Mahlathini|Mahotella Queens|Abdullah Ibrahim|Yvonne Chaka Chaka|Arno Carstens|Just Jinjer|Springbok Nude Girls|Watershed|Prime Circle|Desmond and the Tutus|The Parlotones/parlotones|Kurt Darren|Karen Zoid|Riky Rick|K.O/ko|Kwesta|Busiswa|Moonchild Sanelly|Lira|Zahara|Simphiwe Dana|Thandiswa Mazwai|Babes Wodumo|Young Stunna|Lady Zamar|Ami Faku|Msaki|Sun-El Musician|Big Nuz|Trompies|TKZee|Mandoza|Bongo Maffin|Boom Shaka|PJ Powers|Danny K|Shekhinah|Elaine|Bok van Blerk|Emtee|Blaq Diamond|Kelly Khumalo|Makhadzi"},
+ {q:"Name a UNESCO World Heritage Site in South Africa",c:"Robben Island|Cradle of Humankind/sterkfontein/maropeng|iSimangaliso Wetland Park/isimangaliso/st lucia",u:"Mapungubwe|Maloti-Drakensberg Park/drakensberg|Cape Floral Region/cape floral kingdom|Vredefort Dome/vredefort crater",r:"Richtersveld|Khomani Cultural Landscape/khomani|Barberton Makhonjwa Mountains/barberton|Nelson Mandela Legacy Sites|Pleistocene occupation sites/pinnacle point/sibhudu/diepkloof"},
+ {q:"Name a president of South Africa since 1994",c:"Nelson Mandela/mandela|Cyril Ramaphosa/ramaphosa",u:"Jacob Zuma/zuma|Thabo Mbeki/mbeki",r:"Kgalema Motlanthe/motlanthe"},
+ {q:"Name a South African university",c:"Wits/university of the witwatersrand/witwatersrand|UCT/university of cape town|Stellenbosch/maties/stellenbosch university|University of Pretoria/tuks/up",u:"UJ/university of johannesburg|UKZN/university of kwazulu-natal|Rhodes/rhodes university|UNISA/university of south africa|North-West University/nwu|University of the Free State/ufs/kovsies",r:"Nelson Mandela University/nmu|UWC/university of the western cape|CPUT/cape peninsula university of technology|TUT/tshwane university of technology|Fort Hare/university of fort hare|University of Limpopo|Univen/university of venda|Walter Sisulu University/wsu|Unizulu/university of zululand|DUT/durban university of technology|CUT/central university of technology|VUT/vaal university of technology|MUT/mangosuthu university of technology|University of Mpumalanga|Sol Plaatje University|Sefako Makgatho/smu"},
+ {q:"Name a South African national park",c:"Kruger|Table Mountain|Addo Elephant/addo",u:"Kgalagadi/kalahari gemsbok|Golden Gate|Garden Route/tsitsikamma|Karoo",r:"Augrabies Falls/augrabies|Mapungubwe|Mountain Zebra|Camdeboo|Marakele|Agulhas|West Coast|Bontebok|Tankwa Karoo/tankwa|Namaqua|Richtersveld/ai-ais richtersveld|Mokala|Meerkat"},
+ {q:"Name a South African slang word",c:"Lekker|Howzit|Eish|Ja|Now now|Just now|Robot",u:"Bakkie|Shame|Sharp/sharp sharp|Yebo|Babbelas|Boet|Bru|Jol|Kif/kief|Aweh|Hayibo|Sho|Skinner|Ag|Tannie|Oom|Dop|Braai",r:"Takkies|Slap chips|Gatvol|Dorp|Padkos|Stoep|Mampara|Dwaal|Indaba|Larney|Kasi|Skelm|Ubuntu|Voetsek|Chommie|Mlungu|Eina|Ou|Jislaaik/jislaik|Moegoe|Snoek|Zol|Shebeen|Tjoepstil|Hundreds|Bladdy|Lus|Vrot|Spaza|Ayoba"}
+],
+adults:[
+ {q:"Name a year the Springboks won the Rugby World Cup",c:"1995|2023",u:"2019",r:"2007"},
+ {q:"Name a South African author",c:"J. M. Coetzee/jm coetzee/coetzee|Nadine Gordimer/gordimer|Alan Paton/paton",u:"Athol Fugard/fugard|Zakes Mda/mda|Damon Galgut/galgut|Deon Meyer|Wilbur Smith|Trevor Noah|Antjie Krog/krog|André Brink/andre brink|Breyten Breytenbach",r:"Sindiwe Magona|Bessie Head|Olive Schreiner/schreiner|Herman Charles Bosman/bosman|Es'kia Mphahlele/mphahlele|Mongane Wally Serote/serote|Njabulo Ndebele|Lauren Beukes|Marlene van Niekerk|Etienne van Heerden|Ivan Vladislavić/vladislavic|Sol Plaatje/plaatje|Lewis Nkosi|Can Themba|Miriam Tlali|Kopano Matlwa|Niq Mhlongo|Phaswane Mpe|K. Sello Duiker/sello duiker|Achmat Dangor|Zoë Wicomb/zoe wicomb|Rian Malan|Gcina Mhlophe|J. R. R. Tolkien/tolkien|Ingrid Jonker|N. P. van Wyk Louw|Eugène Marais/eugene marais|Pieter-Dirk Uys|Mark Behr|Margie Orford|Sisonke Msimang|Redi Tlhabi|Jacques Pauw|Max du Preez|Mandla Langa|Fred Khumalo|Elleke Boehmer"},
+ {q:"Name a South African-born actor or filmmaker",c:"Charlize Theron/theron|Trevor Noah|Sharlto Copley/copley",u:"Arnold Vosloo/vosloo|Embeth Davidtz/davidtz|Neill Blomkamp/blomkamp|Thuso Mbedu/mbedu|Pearl Thusi|Nomzamo Mbatha|John Kani|Gavin Hood|Jamie Uys|Leon Schuster/schuster",r:"Basil Rathbone/rathbone|Glynis Johns|Sid James|Terry Pheto|Presley Chweneyagae|Connie Ferguson|Atandwa Kani|Jamie Bartlett|Nambitha Ben-Mazwi|Bonko Khoza|Zola Nombona|Thando Thabethe|Oliver Hermanus|Dean Geyer|Janet Suzman|Antony Sher|Brümilda van Rensburg"},
+ {q:"Name a big South African company or brand",c:"Shoprite/checkers|MTN|Sasol|Eskom|Woolworths/woolies|Nando's/nandos|Standard Bank",u:"Vodacom|Capitec|FirstRand/fnb/first national bank|Discovery|Pick n Pay|Absa|Nedbank|Sanlam|Old Mutual|Naspers|Transnet|SAB/south african breweries|Castle Lager|Steers|Chicken Licken|Spur|Mr Price|Clicks|Telkom|Takealot|Tiger Brands|Bidvest|Pep|SAA/south african airways",r:"Sibanye-Stillwater/sibanye|Implats/impala platinum|Gold Fields|Harmony Gold/harmony|Kumba Iron Ore/kumba|Exxaro|Remgro|Aspen|Netcare|Life Healthcare|Spar|TFG/foschini|Truworths|Pepkor|Growthpoint|Investec|Santam|Momentum|PSG|Super Group|Reunert|Bidcorp|AVI|RCL Foods|Astral|Famous Brands|Italtile|Motus|Dis-Chem|Coronation|Sappi|Thungela|African Rainbow Minerals/arm|Northam Platinum/northam|Omnia|AECI|Tsogo Sun|Sun International|Hyprop|Distell|Pioneer Foods|Ackermans|Builders/builders warehouse|Game|Makro|Debonairs|Wimpy|Ocean Basket|Mugg & Bean/mugg and bean|Simba|Ouma|Mrs Ball's/mrs balls|Kreepy Krauly|Pratley|Mr D|Checkers Sixty60/sixty60|TymeBank|Outsurance|Hollard|Liberty|Multichoice/dstv|Showmax|Cell C|Rain|Kulula|FlySafair|Gautrain|Prasa|Denel|Rand Water|De Beers|Anglo American|Toyota SA"},
+ {q:"Name a battle fought on South African soil",c:"Isandlwana|Blood River/ncome|Rorke's Drift/rorkes drift",u:"Spioenkop/spion kop|Majuba/majuba hill|Ulundi|Magersfontein",r:"Colenso|Elandslaagte|Talana Hill/talana|Modder River|Paardeberg|Vegkop|Belmont|Stormberg|Siege of Ladysmith/ladysmith|Siege of Mafeking/mafeking/mahikeng|Siege of Kimberley/kimberley|Bergendal|Boomplaats|Italeni|Gingindlovu|Hlobane|Kambula|Intombe|Wagon Hill|Vaalkrantz|Tugela Heights|Sannas Post|Diamond Hill|Bothaville|Blaauwberg/blouberg|Muizenberg"},
+ {q:"Name a South African provincial capital",c:"Johannesburg|Cape Town|Bloemfontein",u:"Pietermaritzburg|Polokwane|Kimberley",r:"Bhisho/bisho|Mbombela/nelspruit|Mahikeng/mafikeng"}
+]};
+for (const g in SA_BANK) SA_BANK[g].forEach(p=>{p.sa=1;BANK[g].push(p)});
 const PTS = {c:10,u:25,r:50,x:0};
 const TIERNAME = {c:"Common",u:"Uncommon",r:"Rare",x:"Not accepted"};
 const SQ = {c:"🟩",u:"🟦",r:"🟪",x:"⬜"};
 const ROUND = 7;
+const TIME = {kids:40, juniors:30, teens:25, adults:20};
 
 /* ===================== MATCHING ===================== */
 function norm(s){
@@ -268,7 +314,7 @@ function lev(a,b){
 function parsePrompt(p){
   if(p._list) return p._list;
   const list=[];
-  for(const t of ["c","u","r"]) (p[t]||"").split("|").forEach(e=>{
+  for(const t of ["c","u","r"]) (p[t]||"").split("|").filter(e=>e.trim()).forEach(e=>{
     const al=e.split("/"); list.push({show:al[0],tier:t,keys:al.map(key)});
   });
   return p._list=list;
@@ -301,9 +347,13 @@ function dayNum(){return Math.floor((new Date(today())-new Date("2026-11-16"))/8
 function yesterday(){const d=new Date(today());d.setDate(d.getDate()-1);return d.toISOString().slice(0,10)}
 function seeded(seed){let h=1779033703^seed.length;for(const c of seed){h=Math.imul(h^c.charCodeAt(0),3432918353);h=h<<13|h>>>19}
   return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296}}
-function pick(group,seed){const pool=BANK[group].map((p,i)=>i);const rnd=seed?seeded(seed):Math.random;
-  for(let i=pool.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
-  return pool.slice(0,ROUND).map(i=>BANK[group][i])}
+function pick(group,seed){
+  const rnd=seed?seeded(seed):Math.random;
+  const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+  const sa=shuf(BANK[group].filter(p=>p.sa)), other=shuf(BANK[group].filter(p=>!p.sa));
+  const nSa=Math.min(sa.length,3+Math.floor(rnd()*2)); // 3 or 4 SA prompts
+  return shuf(sa.slice(0,nSa).concat(other.slice(0,ROUND-nSa)));
+}
 function show(v){["vAuth","vHome","vGame","vEnd"].forEach(x=>$(x).classList.toggle("hidden",x!==v));window.scrollTo(0,0)}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
@@ -351,13 +401,19 @@ function goHome(){
 $("hChangeAge").onclick=()=>{const s=$("ageEdit").style;s.display=s.display==="none"?"block":"none"};
 $("hPlay").onclick=()=>startGame(true);
 $("hPractice").onclick=()=>startGame(false);
-async function loadBoard(){
-  $("lbSub").textContent=AGES[me.age].name+" · Round #"+dayNum();
-  $("lb").innerHTML=`<li class="muted">Loading…</li>`;
-  let rows=[];try{rows=(await api("/api/leaderboard?age="+me.age+"&day="+today())).rows}catch(e){}
-  $("lb").innerHTML=rows.length?rows.map((p,i)=>`<li class="${p.id===me.id?"me":""}"><span>${["🥇","🥈","🥉"][i]||(i+1)+"."} ${esc(p.name)} <span class="muted small">${esc(p.todayGrid||"")}</span></span><b>${p.todayScore}</b></li>`).join(""):`<li class="muted">No scores yet today — be the first!</li>`;
+let lbScope="mine", lbTimer=null;
+$("lbMine").onclick=()=>{lbScope="mine";$("lbMine").classList.add("on");$("lbAll").classList.remove("on");loadBoard()};
+$("lbAll").onclick=()=>{lbScope="all";$("lbAll").classList.add("on");$("lbMine").classList.remove("on");loadBoard()};
+async function loadBoard(quiet){
+  clearTimeout(lbTimer);
+  const scope=lbScope==="all"?"all":me.age;
+  $("lbSub").textContent=(scope==="all"?"All age groups":AGES[me.age].name)+" · Round #"+dayNum()+" · updates live";
+  if(!quiet) $("lb").innerHTML=`<li class="muted">Loading…</li>`;
+  let rows=null;try{rows=(await api("/api/leaderboard?age="+scope+"&day="+today())).rows}catch(e){}
+  if(rows) $("lb").innerHTML=rows.length?rows.map((p,i)=>`<li class="${p.id===me.id?"me":""}"><span>${["🥇","🥈","🥉"][i]||(i+1)+"."} ${scope==="all"?AGES[p.age].emoji+" ":""}${esc(p.name)} <span class="muted small">${esc(p.todayGrid||"")}</span></span><b>${p.todayScore}</b></li>`).join(""):`<li class="muted">No scores yet today — be the first!</li>`;
+  else if(!quiet) $("lb").innerHTML=`<li class="muted">Couldn't load the leaderboard — retrying…</li>`;
+  if(!$("vHome").classList.contains("hidden")) lbTimer=setTimeout(()=>loadBoard(true),20000);
 }
-
 /* ===================== GAME ===================== */
 let G=null;
 function startGame(daily){
@@ -372,6 +428,18 @@ function renderQ(){
   $("gInput").value="";$("gHint").textContent="";G.tries=0;
   $("fAns").classList.remove("hidden");$("gResult").classList.add("hidden");
   setTimeout(()=>$("gInput").focus(),50);
+  startTimer();
+}
+let T=null;
+function stopTimer(){clearInterval(T);T=null}
+function startTimer(){
+  stopTimer();
+  const total=TIME[me.age]||25; G.left=total;
+  const draw=()=>{$("gTime").textContent="⏱ "+G.left+"s";$("gBarFill").style.width=(G.left/total*100)+"%";$("gBar").classList.toggle("low",G.left<=5)};
+  $("gBarFill").style.transition="none";$("gBarFill").style.width="100%";void $("gBarFill").offsetWidth;$("gBarFill").style.transition="";
+  draw();
+  T=setInterval(()=>{G.left--;draw();if(G.left<=0){stopTimer();
+    const v=$("gInput").value.trim();finishQ(v,v?judge(G.qs[G.i],v):null,true)}},1000);
 }
 $("fAns").onsubmit=e=>{
   e.preventDefault();
@@ -381,12 +449,13 @@ $("fAns").onsubmit=e=>{
   finishQ(v,hit);
 };
 $("gSkip").onclick=()=>finishQ("",null);
-function finishQ(typed,hit){
+function finishQ(typed,hit,timeout){
+  stopTimer();
   const p=G.qs[G.i], t=hit?hit.tier:"x", pts=PTS[t];
   G.score+=pts; G.res.push({q:p.q,typed,show:hit?hit.show:null,t});
   $("gTier").className="tierbox pop tier-"+(t==="x"?"miss":{c:"common",u:"uncommon",r:"rare"}[t]);
   $("gTier").innerHTML=hit?`<div class="small">${esc(hit.show)}</div><div class="t">${TIERNAME[t]} +${pts}</div>`
-    :`<div class="small">${typed?esc(typed):"Skipped"}</div><div class="t">No points</div>`;
+    :`<div class="small">${timeout&&!typed?"Out of time ⏰":typed?esc(typed):"Skipped"}</div><div class="t">No points</div>`;
   const L=parsePrompt(p), by=t=>L.filter(a=>a.tier===t).map(a=>a.show);
   const rare=by("r"), more=rare.length>6?` <span class="muted">+${rare.length-6} more</span>`:"";
   $("gReveal").innerHTML=`<div><b style="color:var(--common)">Common</b>${esc(by("c").join(", "))}</div>
@@ -408,11 +477,22 @@ async function endGame(){
   G.share=`Brainwave #${dayNum()} (${AGES[me.age].name})${G.daily?"":" practice"}\n${grid} ${G.score}/350`;
   show("vEnd");
   if(G.daily){
-    try{me=(await api("/api/score",{score:G.score,grid,day:today()})).player}catch(e){}
+    const body={score:G.score,grid,day:today()};
+    for(let a=0;a<3;a++){
+      try{me=(await api("/api/score",body)).player;$("eMsg").textContent+=" Score saved ✓";break}
+      catch(e){
+        if(/Already played/.test(e.message)){$("eMsg").textContent="You'd already played today's round, so this one didn't count.";break}
+        if(a===2){$("eMsg").textContent="⚠️ Couldn't save your score ("+e.message+"). Check your connection and tap Back home to try again.";G.unsaved=body}
+        else await new Promise(r=>setTimeout(r,1500));
+      }
+    }
   }
 }
 $("eCopy").onclick=async()=>{try{await navigator.clipboard.writeText(G.share);$("eCopy").textContent="Copied!"}catch(e){$("eCopy").textContent="Couldn't copy"}setTimeout(()=>$("eCopy").textContent="Copy my result",1500)};
-$("eHome").onclick=goHome;
+$("eHome").onclick=async()=>{
+  if(G&&G.unsaved){try{me=(await api("/api/score",G.unsaved)).player;G.unsaved=null}catch(e){}}
+  goHome();
+};
 
 /* ===================== BOOT ===================== */
 async function boot(){
