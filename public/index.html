@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quizillion — the rare-answer quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1b2a; --bg2:#13263a; --card:#172e46; --line:#25425f;
+  --ink:#eef3f8; --muted:#9db0c4; --krill:#ff7a8a; --krill2:#ffb4a2;
+  --common:#3ecf8e; --uncommon:#4aa8ff; --rare:#c084fc; --miss:#5b6b7c;
+  --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:radial-gradient(1200px 600px at 50% -200px,#1d3b5c 0%,var(--bg) 60%);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+.wrap{max-width:560px;margin:0 auto;padding:20px 18px 60px}
+h1,h2,h3,.display{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+header.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.logo{display:flex;align-items:center;gap:10px;font-family:"Bricolage Grotesque";font-weight:800;font-size:24px}
+.logo svg{width:34px;height:34px}
+.logo span b{color:var(--krill)}
+.chip{font-size:12px;padding:6px 10px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--muted);cursor:pointer}
+.chip:hover{color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:16px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+label{display:block;font-size:13px;color:var(--muted);margin:14px 0 6px}
+input[type=text],input[type=password]{width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:500 16px Inter;outline:none;transition:border .15s}
+input:focus{border-color:var(--krill)}
+button{font-family:inherit;cursor:pointer;border:0}
+.btn{display:block;width:100%;padding:15px;border-radius:14px;background:var(--krill);color:#2a0b12;font:700 17px "Bricolage Grotesque";margin-top:18px;transition:transform .08s,filter .15s}
+.btn:hover{filter:brightness(1.06)}.btn:active{transform:scale(.98)}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.tabs{display:flex;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:6px}
+.tabs button{flex:1;padding:10px;border-radius:9px;background:transparent;color:var(--muted);font:600 14px Inter}
+.tabs button.on{background:var(--card);color:var(--ink)}
+.ages{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.age{background:var(--bg);border:1.5px solid var(--line);border-radius:14px;padding:14px;text-align:left;color:var(--ink)}
+.age .e{font-size:26px}.age .n{font-weight:700;font-family:"Bricolage Grotesque";font-size:16px;margin-top:4px}.age .r{font-size:12px;color:var(--muted)}
+.age.on{border-color:var(--krill);background:#2a2335}
+.err{color:#ff9aa5;font-size:13px;margin-top:10px;min-height:16px}
+.hero h2{font-size:30px;line-height:1.1}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.stat{background:var(--bg);border-radius:12px;padding:12px;text-align:center}
+.stat b{display:block;font:800 22px "Bricolage Grotesque"}
+.stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.lb li{list-style:none;display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
+.lb li:last-child{border:0}.lb li.me{color:var(--krill2);font-weight:600}
+.progress{display:flex;gap:6px;margin-bottom:18px}
+.progress i{flex:1;height:6px;border-radius:9px;background:var(--line)}
+.progress i.done{background:var(--krill)}.progress i.cur{background:var(--krill2)}
+.prompt{font:700 27px/1.15 "Bricolage Grotesque";margin:6px 0 4px}
+.tierbox{border-radius:14px;padding:16px;margin-top:16px;text-align:center}
+.tierbox .t{font:800 22px "Bricolage Grotesque"}
+.tier-common{background:rgba(62,207,142,.13);color:var(--common)}
+.tier-uncommon{background:rgba(74,168,255,.13);color:var(--uncommon)}
+.tier-rare{background:rgba(192,132,252,.15);color:var(--rare)}
+.tier-miss{background:rgba(91,107,124,.2);color:#b9c6d3}
+.reveal{margin-top:14px;font-size:14px;line-height:1.6}
+.reveal div{margin-top:6px}
+.reveal b{font-size:11px;text-transform:uppercase;letter-spacing:.07em;margin-right:6px}
+.grid{font-size:30px;letter-spacing:4px;text-align:center;margin:12px 0}
+.score{font:800 64px "Bricolage Grotesque";text-align:center;color:var(--krill)}
+.legend{display:flex;justify-content:center;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;background:var(--c)}
+.note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
+.hidden{display:none!important}
+.row{display:flex;gap:10px}.row .btn{margin-top:12px}
+.hint{font-size:13px;color:var(--krill2);margin-top:10px;min-height:18px}
+@keyframes pop{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
+.pop{animation:pop .25s ease-out}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="logo">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#172e46" stroke="#25425f"/><path d="M9 23c4-9 15-12 22-6-3 1-5 3-6 6-5 2-11 2-16 0z" fill="#ff7a8a"/><circle cx="27" cy="18" r="1.6" fill="#0d1b2a"/><path d="M12 25l-3 4M16 26l-2 4M20 26l-1 4" stroke="#ffb4a2" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>Quiz<b>illion</b></span>
+    </div>
+    <div id="topRight"></div>
+  </header>
+
+  <!-- AUTH -->
+  <section id="vAuth" class="hidden">
+    <div class="card hero">
+      <h2>Think of the answer nobody else will.</h2>
+      <p class="muted" style="margin-top:8px">Seven prompts a day. Every correct answer scores — but the rarer it is, the more points you get.</p>
+    </div>
+    <div class="card">
+      <div class="tabs"><button id="tLogin" class="on">Log in</button><button id="tSignup">Sign up</button></div>
+      <form id="fAuth" autocomplete="off">
+        <label>Username</label>
+        <input type="text" id="aUser" maxlength="16" placeholder="e.g. quizwhiz">
+        <label>4-digit PIN</label>
+        <input type="password" id="aPin" inputmode="numeric" maxlength="4" placeholder="••••">
+        <div id="ageWrap" class="hidden">
+          <label>How old are you?</label>
+          <div class="ages" id="ageGrid"></div>
+        </div>
+        <div class="err" id="aErr"></div>
+        <button class="btn" id="aBtn" type="submit">Log in</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- HOME -->
+  <section id="vHome" class="hidden">
+    <div class="card hero">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+        <span class="badge" id="hAge"></span>
+        <button class="chip" id="hChangeAge">Change age group</button>
+      </div>
+      <h2 style="margin-top:14px" id="hHello"></h2>
+      <p class="muted" id="hSub" style="margin-top:6px"></p>
+      <button class="btn" id="hPlay">Play today's round</button>
+      <button class="btn ghost" id="hPractice">Practice round</button>
+      <div class="stats">
+        <div class="stat"><b id="sStreak">0</b><span>Streak</span></div>
+        <div class="stat"><b id="sBest">0</b><span>Best</span></div>
+        <div class="stat"><b id="sGames">0</b><span>Days played</span></div>
+      </div>
+    </div>
+    <div class="card" id="ageEdit" style="display:none">
+      <h3>Pick your age group</h3>
+      <p class="muted small" style="margin:4px 0 12px">Questions change to suit your age.</p>
+      <div class="ages" id="ageGrid2"></div>
+    </div>
+    <div class="card">
+      <h3>Today's leaderboard</h3>
+      <p class="muted small" id="lbSub" style="margin-top:2px"></p>
+      <ul class="lb" id="lb" style="margin-top:10px"></ul>
+    </div>
+    <div class="card">
+      <h3>How scoring works</h3>
+      <div class="legend" style="justify-content:flex-start;margin-top:10px">
+        <span style="--c:var(--common)">Common +10</span>
+        <span style="--c:var(--uncommon)">Uncommon +25</span>
+        <span style="--c:var(--rare)">Rare +50</span>
+        <span style="--c:var(--miss)">Not accepted 0</span>
+      </div>
+      <p class="muted small" style="margin-top:10px">Each prompt has lots of right answers. Spelling slips are forgiven, and if your answer isn't on the list you get one more try.</p>
+    </div>
+    <p class="note" id="storeNote"></p>
+  </section>
+
+  <!-- GAME -->
+  <section id="vGame" class="hidden">
+    <div class="progress" id="gProg"></div>
+    <div class="card">
+      <div class="muted small" id="gLabel"></div>
+      <div class="prompt" id="gPrompt"></div>
+      <form id="fAns" autocomplete="off">
+        <input type="text" id="gInput" placeholder="Type your answer…" style="margin-top:14px">
+        <div class="hint" id="gHint"></div>
+        <div class="row">
+          <button class="btn ghost" type="button" id="gSkip" style="flex:1">Skip</button>
+          <button class="btn" type="submit" id="gGo" style="flex:2">Lock it in</button>
+        </div>
+      </form>
+      <div id="gResult" class="hidden">
+        <div class="tierbox pop" id="gTier"></div>
+        <div class="reveal" id="gReveal"></div>
+        <button class="btn" id="gNext">Next</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="vEnd" class="hidden">
+    <div class="card" style="text-align:center">
+      <div class="muted small" id="eLabel"></div>
+      <div class="score" id="eScore">0</div>
+      <div class="muted small">out of 350</div>
+      <div class="grid" id="eGrid"></div>
+      <div class="legend">
+        <span style="--c:var(--rare)">Rare</span><span style="--c:var(--uncommon)">Uncommon</span><span style="--c:var(--common)">Common</span><span style="--c:var(--miss)">Miss</span>
+      </div>
+      <p class="muted" id="eMsg" style="margin-top:14px"></p>
+      <button class="btn" id="eCopy">Copy my result</button>
+      <button class="btn ghost" id="eHome">Back home</button>
+    </div>
+    <div class="card"><h3>Your answers</h3><div id="eList" class="reveal"></div></div>
+  </section>
+</div>
+
+<script>
+/* ===================== QUESTION BANK =====================
+   Each prompt: q = question, c/u/r = common / uncommon / rare answers.
+   Answers separated by "|", aliases by "/" (first one is shown). */
+const AGES = {
+  kids:   {name:"Little Explorers", range:"Ages 6–9",  emoji:"🐣"},
+  juniors:{name:"Junior Brains",    range:"Ages 10–12", emoji:"🚀"},
+  teens:  {name:"Teen Thinkers",    range:"Ages 13–17", emoji:"⚡"},
+  adults: {name:"Grown-ups",        range:"Ages 18+",   emoji:"🎓"}
+};
+const BANK = {
+kids:[
+ {q:"Name a farm animal",c:"Cow|Pig|Sheep|Horse|Chicken/hen",u:"Goat|Duck|Donkey|Rooster|Turkey|Lamb",r:"Llama|Alpaca|Goose|Ox/bull|Pony|Mule|Rabbit/bunny|Ostrich"},
+ {q:"Name a colour of the rainbow",c:"Red|Blue|Green|Yellow",u:"Orange|Purple",r:"Indigo|Violet"},
+ {q:"Name a fruit",c:"Apple|Banana|Orange|Strawberry|Grape",u:"Mango|Pear|Watermelon|Pineapple|Peach|Cherry|Kiwi",r:"Litchi/lychee|Papaya/pawpaw|Guava|Pomegranate|Fig|Apricot|Plum|Granadilla/passion fruit|Coconut|Blueberry|Raspberry|Lemon|Nectarine|Naartjie/tangerine|Avocado|Melon|Lime|Dragon fruit|Grapefruit"},
+ {q:"Name an animal that lives in the ocean",c:"Shark|Whale|Dolphin|Fish|Octopus",u:"Jellyfish|Crab|Turtle/sea turtle|Seal|Starfish/sea star|Squid",r:"Seahorse|Penguin|Stingray|Eel|Lobster|Orca/killer whale|Manta ray|Clownfish|Walrus|Sea urchin|Prawn/shrimp|Sea lion|Swordfish|Pufferfish|Narwhal|Coral|Anemone/sea anemone"},
+ {q:"Name a shape",c:"Circle|Square|Triangle|Rectangle",u:"Star|Heart|Oval|Diamond|Pentagon|Hexagon",r:"Octagon|Rhombus|Trapezium/trapezoid|Cube|Sphere|Cylinder|Cone|Pyramid|Parallelogram|Crescent|Kite|Semicircle|Heptagon"},
+ {q:"Name a part of your body",c:"Hand|Head|Foot/feet|Arm|Leg|Eye|Nose|Mouth",u:"Ear|Finger|Toe|Knee|Elbow|Hair|Tooth/teeth|Shoulder|Neck|Tummy/belly",r:"Ankle|Wrist|Chin|Eyebrow|Eyelash|Heart|Brain|Lungs|Stomach|Thumb|Heel|Cheek|Forehead|Hip|Tongue|Lips|Bones|Skin|Fingernail/nail|Belly button/navel"},
+ {q:"Name a vegetable",c:"Carrot|Potato|Broccoli|Peas|Tomato",u:"Cabbage|Lettuce|Corn/mielie/mielies/sweetcorn|Onion|Pumpkin|Spinach|Cucumber|Beans/green beans",r:"Butternut|Beetroot|Cauliflower|Sweet potato|Brinjal/eggplant/aubergine|Baby marrow/zucchini/courgette|Celery|Radish|Asparagus|Kale|Leek|Turnip|Pepper/bell pepper|Mushroom|Garlic|Gem squash|Brussels sprouts"},
+ {q:"Name something that can fly",c:"Bird|Aeroplane/plane/airplane|Butterfly|Bee",u:"Helicopter|Eagle|Kite|Rocket|Bat|Fly|Balloon|Dragonfly",r:"Owl|Parrot|Drone|Hot air balloon|Ladybird/ladybug|Moth|Mosquito|Pigeon|Glider|Blimp/airship|Flamingo|Paper plane|Superhero|Wasp|Hummingbird|Jet|Spaceship|Seagull"},
+ {q:"Name a wild animal from Africa",c:"Lion|Elephant|Giraffe|Zebra",u:"Hippo/hippopotamus|Rhino/rhinoceros|Cheetah|Leopard|Monkey|Crocodile",r:"Buffalo|Warthog|Meerkat|Hyena|Wildebeest|Impala|Kudu|Springbok|Gorilla|Chimpanzee|Baboon|Ostrich|Pangolin|Aardvark|Jackal|Wild dog|Lemur|Okapi|Honey badger|Antelope|Gazelle|Vulture|Python|Mamba|Dassie/rock hyrax|Caracal|Serval"},
+ {q:"Name a sport",c:"Soccer/football|Cricket|Rugby|Tennis|Swimming",u:"Netball|Basketball|Hockey|Golf|Running/athletics|Cycling",r:"Volleyball|Baseball|Boxing|Karate|Gymnastics|Badminton|Surfing|Skateboarding|Table tennis/ping pong|Squash|Judo|Chess|Archery|Fencing|Rowing|Skiing|Horse riding|Dance|Ice skating|Water polo|Softball"}
+],
+juniors:[
+ {q:"Name a planet in our solar system",c:"Earth|Mars|Jupiter",u:"Saturn|Venus|Mercury",r:"Uranus|Neptune"},
+ {q:"Name a country in Africa",c:"South Africa|Egypt|Nigeria|Kenya",u:"Zimbabwe|Ghana|Namibia|Botswana|Morocco|Ethiopia|Mozambique|Tanzania",r:"Eswatini/swaziland|Lesotho|Zambia|Malawi|Angola|Uganda|Rwanda|Burundi|Algeria|Tunisia|Libya|Sudan|South Sudan|Somalia|Eritrea|Djibouti|Senegal|Mali|Niger|Chad|Cameroon|Gabon|Republic of the Congo/congo|DR Congo/drc/democratic republic of the congo|Central African Republic|Ivory Coast/cote divoire|Liberia|Sierra Leone|Guinea|Guinea-Bissau|Gambia|Burkina Faso|Togo|Benin|Mauritania|Madagascar|Mauritius|Seychelles|Comoros|Cape Verde/cabo verde|Sao Tome and Principe|Equatorial Guinea"},
+ {q:"Name a continent",c:"Africa|Europe|Asia",u:"North America|South America|Australia/oceania",r:"Antarctica"},
+ {q:"Name a musical instrument",c:"Guitar|Piano|Drums|Violin",u:"Flute|Trumpet|Saxophone|Recorder|Keyboard",r:"Cello|Harp|Clarinet|Ukulele|Trombone|Tuba|Xylophone|Marimba|Oboe|Bassoon|Banjo|Harmonica|Accordion|Djembe|Tambourine|Triangle|Double bass|French horn|Bagpipes|Mbira|Sitar|Vuvuzela|Organ|Viola|Bass guitar|Glockenspiel"},
+ {q:"Name a bone in the human body",c:"Skull|Femur/thigh bone|Rib",u:"Spine/backbone|Jaw/jawbone/mandible|Pelvis|Tibia/shin bone|Humerus",r:"Kneecap/patella|Radius|Ulna|Fibula|Collarbone/clavicle|Shoulder blade/scapula|Sternum/breastbone|Vertebra/vertebrae|Tailbone/coccyx|Stapes/stirrup|Phalanges|Metacarpals|Tarsals|Carpals|Hip bone|Cranium|Hyoid|Sacrum|Metatarsals|Maxilla"},
+ {q:"Name a South African province",c:"Gauteng|Western Cape|KwaZulu-Natal/kzn",u:"Eastern Cape|Limpopo|Mpumalanga|Free State",r:"North West|Northern Cape"},
+ {q:"Name a gas",c:"Oxygen|Carbon dioxide/co2|Hydrogen",u:"Nitrogen|Helium|Methane|Steam/water vapour/water vapor",r:"Neon|Argon|Ozone|Chlorine|Ammonia|Carbon monoxide|Krypton|Xenon|Radon|Propane|Butane|Fluorine|Nitrous oxide|Sulfur dioxide/sulphur dioxide"},
+ {q:"Name an Olympic sport",c:"Athletics|Swimming|Soccer/football|Gymnastics",u:"Cycling|Boxing|Rowing|Basketball|Tennis|Hockey|Volleyball",r:"Fencing|Archery|Judo|Taekwondo|Wrestling|Weightlifting|Diving|Sailing|Canoeing/kayaking|Equestrian/horse riding|Handball|Water polo|Triathlon|Badminton|Table tennis|Shooting|Modern pentathlon|Golf|Rugby sevens/rugby|Skateboarding|Surfing|Sport climbing/climbing|Beach volleyball|Skiing|Ice hockey|Figure skating|Snowboarding|Curling|Bobsleigh/bobsled|Marathon swimming"},
+ {q:"Name an ocean",c:"Atlantic|Pacific|Indian",u:"Arctic",r:"Southern/antarctic"},
+ {q:"Name a famous inventor or scientist",c:"Albert Einstein/einstein|Isaac Newton/newton|Thomas Edison/edison",u:"Marie Curie/curie|Charles Darwin/darwin|Nikola Tesla/tesla|Galileo|Alexander Graham Bell/graham bell",r:"Wright brothers|Leonardo da Vinci/da vinci|Stephen Hawking/hawking|Louis Pasteur/pasteur|Ada Lovelace/lovelace|Tim Berners-Lee|Alan Turing/turing|Archimedes|James Watt|Benjamin Franklin|Rosalind Franklin|Gregor Mendel/mendel|Michael Faraday/faraday|Johannes Gutenberg/gutenberg|Chris Barnard/christiaan barnard|Copernicus|Johannes Kepler/kepler|Guglielmo Marconi/marconi|Alexander Fleming/fleming|Jane Goodall/goodall|Katherine Johnson|Pythagoras|Elon Musk"}
+],
+teens:[
+ {q:"Name an element on the periodic table",c:"Oxygen|Hydrogen|Carbon|Gold|Iron",u:"Helium|Nitrogen|Silver|Sodium|Calcium|Copper|Neon",r:"Lithium|Beryllium|Boron|Fluorine|Magnesium|Aluminium/aluminum|Silicon|Phosphorus|Sulfur/sulphur|Chlorine|Argon|Potassium|Titanium|Chromium|Manganese|Cobalt|Nickel|Zinc|Arsenic|Bromine|Krypton|Platinum|Mercury|Lead|Tin|Uranium|Plutonium|Radon|Iodine|Xenon|Tungsten|Radium|Polonium|Francium|Caesium/cesium|Germanium|Gallium|Osmium|Iridium|Palladium|Selenium|Strontium|Barium|Vanadium|Scandium|Bismuth|Thorium|Einsteinium|Nobelium|Oganesson|Tellurium|Rubidium|Zirconium|Molybdenum|Cadmium|Indium|Antimony|Hafnium|Tantalum|Rhenium|Thallium|Astatine|Actinium|Americium|Curium|Californium|Neptunium|Fermium|Mendelevium|Lawrencium|Rutherfordium|Seaborgium|Bohrium|Hassium|Meitnerium|Darmstadtium|Roentgenium|Copernicium|Nihonium|Flerovium|Moscovium|Livermorium|Tennessine|Lanthanum|Cerium|Neodymium|Europium|Gadolinium|Ytterbium|Yttrium|Niobium|Ruthenium|Rhodium|Protactinium|Promethium|Samarium|Terbium|Dysprosium|Holmium|Erbium|Thulium|Lutetium|Praseodymium|Technetium|Berkelium"},
+ {q:"Name a country in Europe",c:"France|Germany|Italy|Spain|United Kingdom/uk/england/britain/great britain",u:"Portugal|Netherlands/holland|Greece|Ireland|Sweden|Norway|Switzerland|Belgium|Poland|Russia",r:"Austria|Denmark|Finland|Iceland|Czechia/czech republic|Slovakia|Hungary|Romania|Bulgaria|Croatia|Serbia|Bosnia and Herzegovina/bosnia|Slovenia|Montenegro|Albania|North Macedonia/macedonia|Kosovo|Moldova|Ukraine|Belarus|Lithuania|Latvia|Estonia|Luxembourg|Liechtenstein|Monaco|Andorra|San Marino|Vatican City/vatican|Malta|Cyprus|Scotland|Wales|Northern Ireland"},
+ {q:"Name a play by William Shakespeare",c:"Romeo and Juliet|Hamlet|Macbeth",u:"Othello|King Lear|A Midsummer Night's Dream/midsummer nights dream|Julius Caesar|The Tempest",r:"Twelfth Night|Much Ado About Nothing|The Merchant of Venice|The Taming of the Shrew|As You Like It|Richard III|Richard II|Henry V|Henry IV|Henry VI|Henry VIII|Antony and Cleopatra|Coriolanus|Titus Andronicus|Timon of Athens|Troilus and Cressida|Cymbeline|The Winter's Tale|Measure for Measure|All's Well That Ends Well|The Comedy of Errors|Love's Labour's Lost|The Two Gentlemen of Verona|The Merry Wives of Windsor|Pericles|King John"},
+ {q:"Name a programming language",c:"Python|Java|JavaScript/js",u:"C++|C|C#|PHP|Ruby|Swift",r:"Go/golang|Rust|Kotlin|TypeScript|Scala|Perl|Haskell|Lua|R|MATLAB|Fortran|COBOL|Pascal|Lisp|Assembly|Dart|Julia|Elixir|Erlang|Clojure|F#|Objective-C|Visual Basic/vb|Scratch|SQL|Bash|Prolog|BASIC|Zig|OCaml|Groovy|Delphi|Ada|Smalltalk|Solidity"},
+ {q:"Name a capital city in Asia",c:"Tokyo|Beijing|New Delhi/delhi|Bangkok",u:"Seoul|Singapore|Manila|Jakarta|Kuala Lumpur|Hanoi|Islamabad|Kabul|Tehran",r:"Dhaka|Kathmandu|Thimphu|Colombo/sri jayawardenepura kotte|Malé/male|Naypyidaw|Vientiane|Phnom Penh|Ulaanbaatar|Pyongyang|Bandar Seri Begawan|Dili|Tashkent|Astana|Bishkek|Dushanbe|Ashgabat|Baghdad|Riyadh|Abu Dhabi|Doha|Muscat|Sana'a/sanaa|Amman|Damascus|Beirut|Ankara|Baku|Tbilisi|Yerevan|Kuwait City|Manama"},
+ {q:"Name an organ of the human body",c:"Heart|Brain|Lungs|Stomach|Liver",u:"Kidney|Skin|Intestines/small intestine/large intestine|Bladder|Pancreas",r:"Spleen|Gallbladder|Appendix|Thyroid|Oesophagus/esophagus|Uterus/womb|Ovaries|Thymus|Adrenal glands|Larynx|Trachea/windpipe|Colon|Eye|Tongue|Diaphragm|Pituitary gland|Tonsils|Rectum|Testes|Prostate"},
+ {q:"Name a Greek god or goddess",c:"Zeus|Poseidon|Hades|Athena",u:"Apollo|Aphrodite|Ares|Hermes|Hera|Artemis",r:"Demeter|Dionysus|Hephaestus|Hestia|Persephone|Eros|Nike|Hecate|Pan|Gaia|Cronus/kronos|Helios|Selene|Eos|Nemesis|Tyche|Iris|Morpheus|Hypnos|Thanatos|Uranus|Rhea|Hebe|Asclepius|Atlas|Prometheus|Nyx|Chaos|Eris"},
+ {q:"Name a world currency",c:"Dollar|Euro|Rand|Pound",u:"Yen|Rupee|Yuan/renminbi|Franc|Peso",r:"Rouble/ruble|Won|Real|Krona|Krone|Naira|Shilling|Dirham|Riyal|Lira|Baht|Ringgit|Rupiah|Dinar|Kwacha|Pula|Cedi|Zloty|Forint|Shekel|Dong|Lev|Leu|Koruna|Kwanza|Metical|Birr|Lilangeni|Loti|Rial|Taka|Hryvnia|Bitcoin"},
+ {q:"Name a famous painter",c:"Leonardo da Vinci/da vinci/leonardo|Pablo Picasso/picasso|Vincent van Gogh/van gogh",u:"Michelangelo|Claude Monet/monet|Salvador Dalí/dali|Frida Kahlo/kahlo|Rembrandt",r:"Raphael|Andy Warhol/warhol|Jackson Pollock/pollock|Georgia O'Keeffe/okeeffe|Henri Matisse/matisse|Edvard Munch/munch|Johannes Vermeer/vermeer|Caravaggio|Botticelli|Gustav Klimt/klimt|Paul Cézanne/cezanne|Edgar Degas/degas|Renoir|Goya|Turner|Banksy|Basquiat|Irma Stern|Gerard Sekoto|Magritte|Hokusai|Kandinsky|Mondrian|El Greco|Titian|Seurat|Gauguin|Manet|Hockney|Rothko|Velázquez/velazquez|Tretchikoff|Esther Mahlangu|Bob Ross"},
+ {q:"Name a type of cloud",c:"Cumulus|Cirrus|Stratus",u:"Cumulonimbus|Nimbostratus|Altocumulus|Nimbus",r:"Altostratus|Cirrocumulus|Cirrostratus|Stratocumulus|Lenticular|Mammatus|Contrail|Shelf cloud|Noctilucent|Pileus|Asperitas|Wall cloud|Fog"}
+],
+adults:[
+ {q:"Name a US president",c:"Abraham Lincoln/lincoln|George Washington/washington|Barack Obama/obama|Donald Trump/trump|Joe Biden/biden",u:"John F. Kennedy/jfk/kennedy/john f kennedy|Franklin D. Roosevelt/fdr/franklin roosevelt|Theodore Roosevelt/teddy roosevelt/roosevelt|Ronald Reagan/reagan|Bill Clinton/clinton|George W. Bush/george w bush/bush|Thomas Jefferson/jefferson",r:"John Adams/adams|James Madison/madison|James Monroe/monroe|John Quincy Adams|Andrew Jackson/jackson|Martin Van Buren/van buren|William Henry Harrison|John Tyler/tyler|James K. Polk/polk/james polk|Zachary Taylor|Millard Fillmore/fillmore|Franklin Pierce/pierce|James Buchanan/buchanan|Andrew Johnson|Ulysses S. Grant/grant/ulysses grant|Rutherford B. Hayes/hayes|James Garfield/garfield|Chester Arthur|Grover Cleveland/cleveland|Benjamin Harrison|William McKinley/mckinley|William Howard Taft/taft|Woodrow Wilson/wilson|Warren Harding/harding|Calvin Coolidge/coolidge|Herbert Hoover/hoover|Harry Truman/truman|Dwight Eisenhower/eisenhower|Lyndon B. Johnson/lbj/lyndon johnson|Richard Nixon/nixon|Gerald Ford|Jimmy Carter/carter|George H. W. Bush/george hw bush"},
+ {q:"Name a capital city in South America",c:"Buenos Aires|Brasília/brasilia|Lima",u:"Santiago|Bogotá/bogota|Caracas|Quito",r:"Montevideo|Asunción/asuncion|La Paz|Sucre|Georgetown|Paramaribo"},
+ {q:"Name a novel by Charles Dickens",c:"Oliver Twist|A Christmas Carol|Great Expectations",u:"A Tale of Two Cities|David Copperfield",r:"Bleak House|Hard Times|Little Dorrit|Nicholas Nickleby|The Pickwick Papers|Our Mutual Friend|Dombey and Son|Martin Chuzzlewit|The Old Curiosity Shop|Barnaby Rudge|The Mystery of Edwin Drood"},
+ {q:"Name a Nobel Prize category",c:"Peace|Literature|Physics",u:"Chemistry|Medicine/physiology or medicine/physiology",r:"Economics/economic sciences"},
+ {q:"Name a philosopher",c:"Socrates|Plato|Aristotle|Friedrich Nietzsche/nietzsche",u:"Immanuel Kant/kant|René Descartes/descartes|Confucius|Karl Marx/marx|John Locke/locke|Jean-Paul Sartre/sartre",r:"David Hume/hume|Thomas Hobbes/hobbes|Spinoza|Leibniz|Hegel|Kierkegaard|Schopenhauer|Wittgenstein|John Stuart Mill/mill|Rousseau|Voltaire|Simone de Beauvoir/de beauvoir|Albert Camus/camus|Michel Foucault/foucault|Heidegger|Epicurus|Seneca|Marcus Aurelius|Diogenes|Pythagoras|Heraclitus|Laozi/lao tzu|Mencius|Machiavelli|Thomas Aquinas/aquinas|Augustine|Bertrand Russell/russell|Hannah Arendt/arendt|Jacques Derrida/derrida|Jeremy Bentham/bentham|Adam Smith|Montesquieu|Zeno|Epictetus|Avicenna|Averroes|Francis Bacon|Ayn Rand|Noam Chomsky|Slavoj Žižek/zizek|Cicero|Parmenides|Thales"},
+ {q:"Name a country that borders Germany",c:"France|Poland|Austria|Switzerland",u:"Netherlands/holland|Belgium|Denmark|Czechia/czech republic",r:"Luxembourg"},
+ {q:"Name a bird that cannot fly",c:"Penguin|Ostrich|Emu|Kiwi",u:"Dodo|Cassowary|Rhea|Chicken",r:"Kakapo|Takahe|Steamer duck|Weka|Moa|Elephant bird|Great auk|Flightless cormorant|Inaccessible Island rail"},
+ {q:"Name a member of The Beatles",c:"John Lennon/lennon|Paul McCartney/mccartney",u:"Ringo Starr/ringo/starr|George Harrison/harrison",r:"Pete Best|Stuart Sutcliffe/sutcliffe"},
+ {q:"Name a moon of Jupiter or Saturn",c:"Titan|Europa|Io|Ganymede",u:"Callisto|Enceladus",r:"Mimas|Rhea|Iapetus|Dione|Tethys|Hyperion|Phoebe|Amalthea|Himalia|Thebe|Metis|Pan|Janus|Epimetheus|Prometheus|Pandora|Atlas|Adrastea|Elara|Carme|Pasiphae|Sinope|Lysithea|Ananke|Leda"},
+ {q:"Name a South African-born Nobel Prize winner",c:"Nelson Mandela/mandela|Desmond Tutu/tutu",u:"F. W. de Klerk/de klerk/fw de klerk|Albert Luthuli/luthuli/chief albert luthuli",r:"Nadine Gordimer/gordimer|J. M. Coetzee/coetzee/jm coetzee|Sydney Brenner/brenner|Allan Cormack/cormack|Max Theiler/theiler|Aaron Klug/klug|Michael Levitt/levitt"}
+]};
+const PTS = {c:10,u:25,r:50,x:0};
+const TIERNAME = {c:"Common",u:"Uncommon",r:"Rare",x:"Not accepted"};
+const SQ = {c:"🟩",u:"🟦",r:"🟪",x:"⬜"};
+const ROUND = 7;
+
+/* ===================== MATCHING ===================== */
+function norm(s){
+  return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .replace(/&/g," and ").replace(/[-_.]/g," ").replace(/[^a-z0-9+# ]/g,"")
+    .replace(/\s+/g," ").trim().replace(/^(the|a|an) /,"");
+}
+const key = s => norm(s).replace(/ /g,"");
+function lev(a,b){
+  if(Math.abs(a.length-b.length)>2) return 9;
+  let p=[...Array(b.length+1).keys()];
+  for(let i=1;i<=a.length;i++){let c=[i];for(let j=1;j<=b.length;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}
+  return p[b.length];
+}
+function parsePrompt(p){
+  if(p._list) return p._list;
+  const list=[];
+  for(const t of ["c","u","r"]) (p[t]||"").split("|").forEach(e=>{
+    const al=e.split("/"); list.push({show:al[0],tier:t,keys:al.map(key)});
+  });
+  return p._list=list;
+}
+function judge(p,input){
+  const k=key(input); if(!k) return null;
+  const list=parsePrompt(p);
+  const strip=s=>s.replace(/(es|s)$/,"");
+  for(const a of list) if(a.keys.some(x=>x===k||strip(x)===strip(k))) return a;
+  if(k.length>=5){const tol=k.length>=9?2:1;let best=null,bd=9;
+    for(const a of list) for(const x of a.keys){if(x.length<4)continue;const d=lev(k,x);if(d<bd){bd=d;best=a}}
+    if(bd<=tol) return best;}
+  return null;
+}
+
+/* ===================== API ===================== */
+const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+let TOKEN=LS.get("qz_token");
+async function api(path,body){
+  const r=await fetch(path,{method:body?"POST":"GET",headers:{"content-type":"application/json",...(TOKEN?{authorization:"Bearer "+TOKEN}:{})},body:body?JSON.stringify(body):undefined});
+  const j=await r.json().catch(()=>({error:"Server error"}));
+  if(!r.ok) throw new Error(j.error||"Something went wrong");
+  return j;
+}
+function storeNote(){$("storeNote").textContent="Your account works on any device — just log in."}
+/* ===================== HELPERS ===================== */
+const $=id=>document.getElementById(id);
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function dayNum(){return Math.floor((new Date(today())-new Date("2026-11-16"))/864e5)+1}
+function yesterday(){const d=new Date(today());d.setDate(d.getDate()-1);return d.toISOString().slice(0,10)}
+function seeded(seed){let h=1779033703^seed.length;for(const c of seed){h=Math.imul(h^c.charCodeAt(0),3432918353);h=h<<13|h>>>19}
+  return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296}}
+function pick(group,seed){const pool=BANK[group].map((p,i)=>i);const rnd=seed?seeded(seed):Math.random;
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  return pool.slice(0,ROUND).map(i=>BANK[group][i])}
+function show(v){["vAuth","vHome","vGame","vEnd"].forEach(x=>$(x).classList.toggle("hidden",x!==v));window.scrollTo(0,0)}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+/* ===================== AUTH ===================== */
+let mode="login", chosenAge=null, me=null;
+function ageCards(el,cur,onPick){
+  el.innerHTML=Object.entries(AGES).map(([k,a])=>`<button type="button" class="age ${k===cur?"on":""}" data-k="${k}"><div class="e">${a.emoji}</div><div class="n">${a.name}</div><div class="r">${a.range}</div></button>`).join("");
+  el.querySelectorAll(".age").forEach(b=>b.onclick=()=>{el.querySelectorAll(".age").forEach(x=>x.classList.remove("on"));b.classList.add("on");onPick(b.dataset.k)});
+}
+function setMode(m){mode=m;$("tLogin").classList.toggle("on",m==="login");$("tSignup").classList.toggle("on",m==="signup");
+  $("ageWrap").classList.toggle("hidden",m==="login");$("aBtn").textContent=m==="login"?"Log in":"Create account";$("aErr").textContent=""}
+$("tLogin").onclick=()=>setMode("login");$("tSignup").onclick=()=>setMode("signup");
+ageCards($("ageGrid"),null,k=>chosenAge=k);
+
+$("fAuth").onsubmit=async e=>{
+  e.preventDefault();
+  const name=$("aUser").value.trim(), pin=$("aPin").value.trim();
+  const err=m=>$("aErr").textContent=m;
+  if(!/^[a-zA-Z0-9_-]{3,16}$/.test(name)) return err("Username: 3–16 letters, numbers, _ or -");
+  if(!/^\d{4}$/.test(pin)) return err("PIN must be 4 digits");
+  $("aBtn").disabled=true;
+  try{
+    if(mode==="signup"&&!chosenAge) return err("Pick your age group");
+    const j=await api(mode==="signup"?"/api/signup":"/api/login",{name,pin,age:chosenAge});
+    TOKEN=j.token; LS.set("qz_token",TOKEN); me=j.player; goHome();
+  }catch(ex){err(ex.message)}finally{$("aBtn").disabled=false}
+};
+function logout(){api("/api/logout",{}).catch(()=>{});me=null;TOKEN=null;LS.del("qz_token");$("topRight").innerHTML="";$("aPin").value="";setMode("login");show("vAuth")}
+
+/* ===================== HOME ===================== */
+function goHome(){
+  if(me.lastDay!==today()&&me.lastDay!==yesterday()&&me.streak){me.streak=0}
+  $("topRight").innerHTML=`<button class="chip" id="bOut">${esc(me.name)} · Log out</button>`;$("bOut").onclick=logout;
+  const a=AGES[me.age];
+  $("hAge").textContent=a.emoji+" "+a.name+" · "+a.range;
+  const done=me.lastDay===today()&&me.todayScore!=null;
+  $("hHello").textContent=done?`Nice one, ${me.name}!`:`Ready, ${me.name}?`;
+  $("hSub").textContent=done?`You scored ${me.todayScore} on Round #${dayNum()}. A new round drops at midnight.`:`Round #${dayNum()} — ${ROUND} prompts. Go rare or go home.`;
+  $("hPlay").textContent=done?"Today's round done ✓":"Play today's round";$("hPlay").disabled=done;
+  $("sStreak").textContent=me.streak||0;$("sBest").textContent=me.best||0;$("sGames").textContent=me.days||0;
+  $("ageEdit").style.display="none";
+  ageCards($("ageGrid2"),me.age,async k=>{try{me=(await api("/api/age",{age:k})).player}catch(e){}goHome()});
+  storeNote(); show("vHome"); loadBoard();
+}
+$("hChangeAge").onclick=()=>{const s=$("ageEdit").style;s.display=s.display==="none"?"block":"none"};
+$("hPlay").onclick=()=>startGame(true);
+$("hPractice").onclick=()=>startGame(false);
+async function loadBoard(){
+  $("lbSub").textContent=AGES[me.age].name+" · Round #"+dayNum();
+  $("lb").innerHTML=`<li class="muted">Loading…</li>`;
+  let rows=[];try{rows=(await api("/api/leaderboard?age="+me.age+"&day="+today())).rows}catch(e){}
+  $("lb").innerHTML=rows.length?rows.map((p,i)=>`<li class="${p.id===me.id?"me":""}"><span>${["🥇","🥈","🥉"][i]||(i+1)+"."} ${esc(p.name)} <span class="muted small">${esc(p.todayGrid||"")}</span></span><b>${p.todayScore}</b></li>`).join(""):`<li class="muted">No scores yet today — be the first!</li>`;
+}
+
+/* ===================== GAME ===================== */
+let G=null;
+function startGame(daily){
+  G={daily,qs:pick(me.age,daily?today()+":"+me.age:null),i:0,score:0,res:[],tries:0};
+  renderQ(); show("vGame");
+}
+function renderQ(){
+  const p=G.qs[G.i];
+  $("gProg").innerHTML=G.qs.map((_,i)=>`<i class="${i<G.i?"done":i===G.i?"cur":""}"></i>`).join("");
+  $("gLabel").textContent=(G.daily?"Round #"+dayNum():"Practice")+" · "+(G.i+1)+" of "+ROUND+" · "+G.score+" pts";
+  $("gPrompt").textContent=p.q+"…";
+  $("gInput").value="";$("gHint").textContent="";G.tries=0;
+  $("fAns").classList.remove("hidden");$("gResult").classList.add("hidden");
+  setTimeout(()=>$("gInput").focus(),50);
+}
+$("fAns").onsubmit=e=>{
+  e.preventDefault();
+  const v=$("gInput").value.trim(); if(!v) return;
+  const p=G.qs[G.i], hit=judge(p,v);
+  if(!hit&&G.tries===0){G.tries=1;$("gHint").textContent="Hmm, that's not on our list — one more try!";$("gInput").select();return}
+  finishQ(v,hit);
+};
+$("gSkip").onclick=()=>finishQ("",null);
+function finishQ(typed,hit){
+  const p=G.qs[G.i], t=hit?hit.tier:"x", pts=PTS[t];
+  G.score+=pts; G.res.push({q:p.q,typed,show:hit?hit.show:null,t});
+  $("gTier").className="tierbox pop tier-"+(t==="x"?"miss":{c:"common",u:"uncommon",r:"rare"}[t]);
+  $("gTier").innerHTML=hit?`<div class="small">${esc(hit.show)}</div><div class="t">${TIERNAME[t]} +${pts}</div>`
+    :`<div class="small">${typed?esc(typed):"Skipped"}</div><div class="t">No points</div>`;
+  const L=parsePrompt(p), by=t=>L.filter(a=>a.tier===t).map(a=>a.show);
+  const rare=by("r"), more=rare.length>6?` <span class="muted">+${rare.length-6} more</span>`:"";
+  $("gReveal").innerHTML=`<div><b style="color:var(--common)">Common</b>${esc(by("c").join(", "))}</div>
+    <div><b style="color:var(--uncommon)">Uncommon</b>${esc(by("u").join(", "))}</div>
+    <div><b style="color:var(--rare)">Rare</b>${esc(rare.slice(0,6).join(", "))}${more}</div>`;
+  $("gLabel").textContent=(G.daily?"Round #"+dayNum():"Practice")+" · "+(G.i+1)+" of "+ROUND+" · "+G.score+" pts";
+  $("fAns").classList.add("hidden");$("gResult").classList.remove("hidden");
+  $("gNext").textContent=G.i===ROUND-1?"See my score":"Next";$("gNext").focus();
+}
+$("gNext").onclick=()=>{G.i++; if(G.i<ROUND) renderQ(); else endGame()};
+
+async function endGame(){
+  const grid=G.res.map(r=>SQ[r.t]).join("");
+  $("eLabel").textContent=G.daily?`Round #${dayNum()} · ${AGES[me.age].name}`:"Practice round";
+  $("eScore").textContent=G.score;$("eGrid").textContent=grid;
+  const rares=G.res.filter(r=>r.t==="r").length;
+  $("eMsg").textContent=G.score>=250?"Legendary. Your brain lives off the beaten track.":rares>=2?`${rares} rare answers — proper deep cuts!`:G.score>=120?"Solid round! Try going rarer tomorrow.":"Every round makes you sharper. Go again tomorrow!";
+  $("eList").innerHTML=G.res.map(r=>`<div>${SQ[r.t]} <b style="text-transform:none;letter-spacing:0;font-size:14px">${esc(r.q)}</b> — ${r.show?esc(r.show):r.typed?`<span class="muted">${esc(r.typed)}</span>`:`<span class="muted">skipped</span>`} <span class="muted">+${PTS[r.t]}</span></div>`).join("");
+  G.share=`Quizillion #${dayNum()} (${AGES[me.age].name})${G.daily?"":" practice"}\n${grid} ${G.score}/350`;
+  show("vEnd");
+  if(G.daily){
+    try{me=(await api("/api/score",{score:G.score,grid,day:today()})).player}catch(e){}
+  }
+}
+$("eCopy").onclick=async()=>{try{await navigator.clipboard.writeText(G.share);$("eCopy").textContent="Copied!"}catch(e){$("eCopy").textContent="Couldn't copy"}setTimeout(()=>$("eCopy").textContent="Copy my result",1500)};
+$("eHome").onclick=goHome;
+
+/* ===================== BOOT ===================== */
+async function boot(){
+  show("vAuth");
+  if(TOKEN){try{me=(await api("/api/me")).player;goHome()}catch(e){TOKEN=null;LS.del("qz_token")}}
+}
+boot();
+</script>
+</body>
+</html>
