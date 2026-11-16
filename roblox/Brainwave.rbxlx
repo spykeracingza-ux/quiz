@@ -1,0 +1,1245 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+<Item class="Workspace" referent="RBX0001"><Properties><string name="Name">Workspace</string></Properties>
+<Item class="Part" referent="RBX0002"><Properties>
+<string name="Name">Baseplate</string><bool name="Anchored">true</bool>
+<CoordinateFrame name="CFrame"><X>0</X><Y>-10</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+<Vector3 name="size"><X>512</X><Y>20</Y><Z>512</Z></Vector3>
+<Color3uint8 name="Color3uint8">4279049002</Color3uint8>
+</Properties></Item>
+<Item class="SpawnLocation" referent="RBX0003"><Properties>
+<string name="Name">SpawnLocation</string><bool name="Anchored">true</bool>
+<CoordinateFrame name="CFrame"><X>0</X><Y>0.5</Y><Z>0</Z><R00>1</R00><R01>0</R01><R02>0</R02><R10>0</R10><R11>1</R11><R12>0</R12><R20>0</R20><R21>0</R21><R22>1</R22></CoordinateFrame>
+<Vector3 name="size"><X>12</X><Y>1</Y><Z>12</Z></Vector3>
+<Color3uint8 name="Color3uint8">4294933130</Color3uint8><bool name="Neutral">true</bool><int name="Duration">0</int>
+</Properties></Item>
+</Item>
+<Item class="ReplicatedStorage" referent="RBX0004"><Properties><string name="Name">ReplicatedStorage</string></Properties>
+<Item class="ModuleScript" referent="RBX0005"><Properties><string name="Name">BrainwaveQuestions</string><ProtectedString name="Source"><![CDATA[-- Brainwave question bank (generated from the website's questions).
+-- Each answer is "Display/alias/alias". c = common (10), u = uncommon (25), r = rare (50).
+
+local Q = {}
+
+Q.AGES = {
+	kids = { name = "Little Explorers", range = "Ages 6–9", emoji = "🐣" },
+	juniors = { name = "Junior Brains", range = "Ages 10–12", emoji = "🚀" },
+	teens = { name = "Teen Thinkers", range = "Ages 13–17", emoji = "⚡" },
+	adults = { name = "Grown-ups", range = "Ages 18+", emoji = "🎓" },
+}
+Q.ORDER = { "kids", "juniors", "teens", "adults" }
+
+Q.BANK = {
+	kids = {
+		{ q = "Name a farm animal", sa = false,
+			c = { "Cow", "Pig", "Sheep", "Horse", "Chicken/hen" },
+			u = { "Goat", "Duck", "Donkey", "Rooster", "Turkey", "Lamb" },
+			r = { "Llama", "Alpaca", "Goose", "Ox/bull", "Pony", "Mule", "Rabbit/bunny", "Ostrich" } },
+		{ q = "Name a colour of the rainbow", sa = false,
+			c = { "Red", "Blue", "Green", "Yellow" },
+			u = { "Orange", "Purple" },
+			r = { "Indigo", "Violet" } },
+		{ q = "Name a fruit", sa = false,
+			c = { "Apple", "Banana", "Orange", "Strawberry", "Grape" },
+			u = { "Mango", "Pear", "Watermelon", "Pineapple", "Peach", "Cherry", "Kiwi" },
+			r = { "Litchi/lychee", "Papaya/pawpaw", "Guava", "Pomegranate", "Fig", "Apricot", "Plum", "Granadilla/passion fruit", "Coconut", "Blueberry", "Raspberry", "Lemon", "Nectarine", "Naartjie/tangerine", "Avocado", "Melon", "Lime", "Dragon fruit", "Grapefruit" } },
+		{ q = "Name an animal that lives in the ocean", sa = false,
+			c = { "Shark", "Whale", "Dolphin", "Fish", "Octopus" },
+			u = { "Jellyfish", "Crab", "Turtle/sea turtle", "Seal", "Starfish/sea star", "Squid" },
+			r = { "Seahorse", "Penguin", "Stingray", "Eel", "Lobster", "Orca/killer whale", "Manta ray", "Clownfish", "Walrus", "Sea urchin", "Prawn/shrimp", "Sea lion", "Swordfish", "Pufferfish", "Narwhal", "Coral", "Anemone/sea anemone" } },
+		{ q = "Name a shape", sa = false,
+			c = { "Circle", "Square", "Triangle", "Rectangle" },
+			u = { "Star", "Heart", "Oval", "Diamond", "Pentagon", "Hexagon" },
+			r = { "Octagon", "Rhombus", "Trapezium/trapezoid", "Cube", "Sphere", "Cylinder", "Cone", "Pyramid", "Parallelogram", "Crescent", "Kite", "Semicircle", "Heptagon" } },
+		{ q = "Name a part of your body", sa = false,
+			c = { "Hand", "Head", "Foot/feet", "Arm", "Leg", "Eye", "Nose", "Mouth" },
+			u = { "Ear", "Finger", "Toe", "Knee", "Elbow", "Hair", "Tooth/teeth", "Shoulder", "Neck", "Tummy/belly" },
+			r = { "Ankle", "Wrist", "Chin", "Eyebrow", "Eyelash", "Heart", "Brain", "Lungs", "Stomach", "Thumb", "Heel", "Cheek", "Forehead", "Hip", "Tongue", "Lips", "Bones", "Skin", "Fingernail/nail", "Belly button/navel" } },
+		{ q = "Name a vegetable", sa = false,
+			c = { "Carrot", "Potato", "Broccoli", "Peas", "Tomato" },
+			u = { "Cabbage", "Lettuce", "Corn/mielie/mielies/sweetcorn", "Onion", "Pumpkin", "Spinach", "Cucumber", "Beans/green beans" },
+			r = { "Butternut", "Beetroot", "Cauliflower", "Sweet potato", "Brinjal/eggplant/aubergine", "Baby marrow/zucchini/courgette", "Celery", "Radish", "Asparagus", "Kale", "Leek", "Turnip", "Pepper/bell pepper", "Mushroom", "Garlic", "Gem squash", "Brussels sprouts" } },
+		{ q = "Name something that can fly", sa = false,
+			c = { "Bird", "Aeroplane/plane/airplane", "Butterfly", "Bee" },
+			u = { "Helicopter", "Eagle", "Kite", "Rocket", "Bat", "Fly", "Balloon", "Dragonfly" },
+			r = { "Owl", "Parrot", "Drone", "Hot air balloon", "Ladybird/ladybug", "Moth", "Mosquito", "Pigeon", "Glider", "Blimp/airship", "Flamingo", "Paper plane", "Superhero", "Wasp", "Hummingbird", "Jet", "Spaceship", "Seagull" } },
+		{ q = "Name a wild animal from Africa", sa = false,
+			c = { "Lion", "Elephant", "Giraffe", "Zebra" },
+			u = { "Hippo/hippopotamus", "Rhino/rhinoceros", "Cheetah", "Leopard", "Monkey", "Crocodile" },
+			r = { "Buffalo", "Warthog", "Meerkat", "Hyena", "Wildebeest", "Impala", "Kudu", "Springbok", "Gorilla", "Chimpanzee", "Baboon", "Ostrich", "Pangolin", "Aardvark", "Jackal", "Wild dog", "Lemur", "Okapi", "Honey badger", "Antelope", "Gazelle", "Vulture", "Python", "Mamba", "Dassie/rock hyrax", "Caracal", "Serval" } },
+		{ q = "Name a sport", sa = false,
+			c = { "Soccer/football", "Cricket", "Rugby", "Tennis", "Swimming" },
+			u = { "Netball", "Basketball", "Hockey", "Golf", "Running/athletics", "Cycling" },
+			r = { "Volleyball", "Baseball", "Boxing", "Karate", "Gymnastics", "Badminton", "Surfing", "Skateboarding", "Table tennis/ping pong", "Squash", "Judo", "Chess", "Archery", "Fencing", "Rowing", "Skiing", "Horse riding", "Dance", "Ice skating", "Water polo", "Softball" } },
+		{ q = "Name one of the Big Five", sa = true,
+			c = { "Lion", "Elephant" },
+			u = { "Leopard", "Rhino/rhinoceros" },
+			r = { "Buffalo/cape buffalo" } },
+		{ q = "Name a colour on the South African flag", sa = true,
+			c = { "Green", "Yellow/gold", "Black" },
+			u = { "Red", "Blue" },
+			r = { "White" } },
+		{ q = "Name a South African food", sa = true,
+			c = { "Boerewors/wors", "Biltong", "Pap", "Bunny chow", "Braai" },
+			u = { "Koeksister/koesister", "Bobotie", "Potjiekos", "Milk tart/melktert", "Chakalaka", "Vetkoek/amagwinya" },
+			r = { "Malva pudding", "Samoosa/samosa", "Droëwors/droewors", "Mogodu", "Umngqusho/samp and beans", "Sosatie", "Amasi", "Rusks/beskuit", "Bredie", "Morogo", "Mopane worms", "Slap chips", "Gatsby", "Kota", "Chutney", "Mealie bread" } },
+		{ q = "Name a big city in South Africa", sa = true,
+			c = { "Johannesburg/joburg/jozi/jhb", "Cape Town", "Durban" },
+			u = { "Pretoria/tshwane", "Gqeberha/port elizabeth/pe", "Bloemfontein/bloem", "Soweto" },
+			r = { "East London", "Polokwane", "Mbombela/nelspruit", "Kimberley", "Pietermaritzburg", "Rustenburg", "George", "Stellenbosch", "Mahikeng/mafikeng", "Richards Bay", "Welkom", "Upington", "Benoni", "Centurion", "Midrand", "Sandton", "Umhlanga", "Ballito", "Knysna", "Paarl", "Worcester", "Vereeniging", "Germiston", "Boksburg", "Krugersdorp/mogale city" } },
+		{ q = "Name a South African bird", sa = true,
+			c = { "Ostrich", "Hadeda", "Fish eagle/african fish eagle/eagle" },
+			u = { "Blue crane", "Guinea fowl/guineafowl", "Flamingo", "Penguin/african penguin", "Vulture" },
+			r = { "Hornbill", "Secretary bird", "Sunbird", "Weaver", "Lourie/go-away bird/turaco", "Sugarbird", "Kingfisher", "Hoopoe", "Oxpecker", "Bee-eater", "Owl", "Mousebird", "Kori bustard", "Crowned crane", "Korhaan", "Bokmakierie", "Bulbul", "Starling", "Ibis", "Pied crow", "Hamerkop", "Spoonbill" } },
+		{ q = "Name a South African sports team's nickname", sa = true,
+			c = { "Springboks/bokke/boks", "Bafana Bafana", "Proteas" },
+			u = { "Banyana Banyana", "Blitzboks" },
+			r = { "Amajita", "Amajimbos", "Baby Boks/junior springboks", "Basetsana", "Spar Proteas" } },
+	},
+	juniors = {
+		{ q = "Name a planet in our solar system", sa = false,
+			c = { "Earth", "Mars", "Jupiter" },
+			u = { "Saturn", "Venus", "Mercury" },
+			r = { "Uranus", "Neptune" } },
+		{ q = "Name a country in Africa", sa = false,
+			c = { "South Africa", "Egypt", "Nigeria", "Kenya" },
+			u = { "Zimbabwe", "Ghana", "Namibia", "Botswana", "Morocco", "Ethiopia", "Mozambique", "Tanzania" },
+			r = { "Eswatini/swaziland", "Lesotho", "Zambia", "Malawi", "Angola", "Uganda", "Rwanda", "Burundi", "Algeria", "Tunisia", "Libya", "Sudan", "South Sudan", "Somalia", "Eritrea", "Djibouti", "Senegal", "Mali", "Niger", "Chad", "Cameroon", "Gabon", "Republic of the Congo/congo", "DR Congo/drc/democratic republic of the congo", "Central African Republic", "Ivory Coast/cote divoire", "Liberia", "Sierra Leone", "Guinea", "Guinea-Bissau", "Gambia", "Burkina Faso", "Togo", "Benin", "Mauritania", "Madagascar", "Mauritius", "Seychelles", "Comoros", "Cape Verde/cabo verde", "Sao Tome and Principe", "Equatorial Guinea" } },
+		{ q = "Name a continent", sa = false,
+			c = { "Africa", "Europe", "Asia" },
+			u = { "North America", "South America", "Australia/oceania" },
+			r = { "Antarctica" } },
+		{ q = "Name a musical instrument", sa = false,
+			c = { "Guitar", "Piano", "Drums", "Violin" },
+			u = { "Flute", "Trumpet", "Saxophone", "Recorder", "Keyboard" },
+			r = { "Cello", "Harp", "Clarinet", "Ukulele", "Trombone", "Tuba", "Xylophone", "Marimba", "Oboe", "Bassoon", "Banjo", "Harmonica", "Accordion", "Djembe", "Tambourine", "Triangle", "Double bass", "French horn", "Bagpipes", "Mbira", "Sitar", "Vuvuzela", "Organ", "Viola", "Bass guitar", "Glockenspiel" } },
+		{ q = "Name a bone in the human body", sa = false,
+			c = { "Skull", "Femur/thigh bone", "Rib" },
+			u = { "Spine/backbone", "Jaw/jawbone/mandible", "Pelvis", "Tibia/shin bone", "Humerus" },
+			r = { "Kneecap/patella", "Radius", "Ulna", "Fibula", "Collarbone/clavicle", "Shoulder blade/scapula", "Sternum/breastbone", "Vertebra/vertebrae", "Tailbone/coccyx", "Stapes/stirrup", "Phalanges", "Metacarpals", "Tarsals", "Carpals", "Hip bone", "Cranium", "Hyoid", "Sacrum", "Metatarsals", "Maxilla" } },
+		{ q = "Name a South African province", sa = false,
+			c = { "Gauteng", "Western Cape", "KwaZulu-Natal/kzn" },
+			u = { "Eastern Cape", "Limpopo", "Mpumalanga", "Free State" },
+			r = { "North West", "Northern Cape" } },
+		{ q = "Name a gas", sa = false,
+			c = { "Oxygen", "Carbon dioxide/co2", "Hydrogen" },
+			u = { "Nitrogen", "Helium", "Methane", "Steam/water vapour/water vapor" },
+			r = { "Neon", "Argon", "Ozone", "Chlorine", "Ammonia", "Carbon monoxide", "Krypton", "Xenon", "Radon", "Propane", "Butane", "Fluorine", "Nitrous oxide", "Sulfur dioxide/sulphur dioxide" } },
+		{ q = "Name an Olympic sport", sa = false,
+			c = { "Athletics", "Swimming", "Soccer/football", "Gymnastics" },
+			u = { "Cycling", "Boxing", "Rowing", "Basketball", "Tennis", "Hockey", "Volleyball" },
+			r = { "Fencing", "Archery", "Judo", "Taekwondo", "Wrestling", "Weightlifting", "Diving", "Sailing", "Canoeing/kayaking", "Equestrian/horse riding", "Handball", "Water polo", "Triathlon", "Badminton", "Table tennis", "Shooting", "Modern pentathlon", "Golf", "Rugby sevens/rugby", "Skateboarding", "Surfing", "Sport climbing/climbing", "Beach volleyball", "Skiing", "Ice hockey", "Figure skating", "Snowboarding", "Curling", "Bobsleigh/bobsled", "Marathon swimming" } },
+		{ q = "Name an ocean", sa = false,
+			c = { "Atlantic", "Pacific", "Indian" },
+			u = { "Arctic" },
+			r = { "Southern/antarctic" } },
+		{ q = "Name a famous inventor or scientist", sa = false,
+			c = { "Albert Einstein/einstein", "Isaac Newton/newton", "Thomas Edison/edison" },
+			u = { "Marie Curie/curie", "Charles Darwin/darwin", "Nikola Tesla/tesla", "Galileo", "Alexander Graham Bell/graham bell" },
+			r = { "Wright brothers", "Leonardo da Vinci/da vinci", "Stephen Hawking/hawking", "Louis Pasteur/pasteur", "Ada Lovelace/lovelace", "Tim Berners-Lee", "Alan Turing/turing", "Archimedes", "James Watt", "Benjamin Franklin", "Rosalind Franklin", "Gregor Mendel/mendel", "Michael Faraday/faraday", "Johannes Gutenberg/gutenberg", "Chris Barnard/christiaan barnard", "Copernicus", "Johannes Kepler/kepler", "Guglielmo Marconi/marconi", "Alexander Fleming/fleming", "Jane Goodall/goodall", "Katherine Johnson", "Pythagoras", "Elon Musk" } },
+		{ q = "Name an official language of South Africa", sa = true,
+			c = { "English", "Afrikaans", "isiZulu/zulu" },
+			u = { "isiXhosa/xhosa", "Sesotho/sotho/southern sotho", "Setswana/tswana", "Sepedi/pedi/northern sotho", "isiNdebele/ndebele" },
+			r = { "Xitsonga/tsonga", "Tshivenda/venda", "siSwati/swati/swazi", "South African Sign Language/sasl/sign language" } },
+		{ q = "Name an animal on a South African banknote", sa = true,
+			c = { "Lion", "Elephant" },
+			u = { "Rhino/rhinoceros", "Buffalo" },
+			r = { "Leopard" } },
+		{ q = "Name a South African national symbol from nature", sa = true,
+			c = { "Springbok", "King protea/protea" },
+			u = { "Blue crane", "Galjoen" },
+			r = { "Real yellowwood/yellowwood" } },
+		{ q = "Name a river in South Africa", sa = true,
+			c = { "Orange/gariep", "Vaal", "Limpopo" },
+			u = { "Tugela/thukela", "Crocodile", "Olifants" },
+			r = { "Breede", "Great Fish/fish", "Great Kei/kei", "Sundays", "Gamtoos", "Berg", "Sabie", "Komati", "Mzimvubu", "Umgeni/mgeni", "Caledon", "Gouritz", "Letaba", "Keiskamma", "Buffalo", "Bushmans", "Luvuvhu", "Molopo", "Doring", "Elands", "Pongola", "Umzimkulu", "Mooi", "Hex", "Kowie", "Swartkops" } },
+		{ q = "Name a famous South African sportsperson", sa = true,
+			c = { "Siya Kolisi/kolisi", "Wayde van Niekerk/van niekerk", "Caster Semenya/semenya", "Percy Tau" },
+			u = { "Bryan Habana/habana", "AB de Villiers/de villiers", "Chad le Clos/le clos", "Tatjana Smith/tatjana schoenmaker/schoenmaker", "Kagiso Rabada/rabada", "Akani Simbine/simbine", "Lucas Radebe/radebe", "Benni McCarthy/mccarthy", "Faf de Klerk", "Cheslin Kolbe/kolbe", "Eben Etzebeth/etzebeth", "Thembi Kgatlana/kgatlana", "Temba Bavuma/bavuma", "Ronwen Williams" },
+			r = { "Ernie Els", "Gary Player", "Retief Goosen", "Penny Heyns", "Josia Thugwane", "Natalie du Toit", "Zola Budd", "Jonty Rhodes", "Shaun Pollock", "Jacques Kallis/kallis", "Hashim Amla/amla", "Graeme Smith", "Dale Steyn/steyn", "Francois Pienaar/pienaar", "Joost van der Westhuizen", "Os du Randt", "Doctor Khumalo", "Jomo Sono", "Steven Pienaar", "Shaun Bartlett", "Mark Fish", "Kaizer Motaung", "Kevin Anderson", "Elana Meyer", "Ryk Neethling", "Roland Schoeman", "Cameron van der Burgh", "Sunette Viljoen", "Quinton de Kock", "Handré Pollard/handre pollard/pollard", "Pieter-Steph du Toit", "Trevor Immelman", "Charl Schwartzel", "Louis Oosthuizen", "Lewis Pugh", "Bruce Fordyce", "Hezekiél Sepeng/sepeng", "Mark Boucher", "Makhaya Ntini/ntini", "Bongi Mbonambi", "Lukhanyo Am", "Makazole Mapimpi/mapimpi", "Rassie Erasmus" } },
+		{ q = "Name a South African mountain or mountain range", sa = true,
+			c = { "Table Mountain", "Drakensberg/ukhahlamba" },
+			u = { "Magaliesberg", "Lion's Head/lions head", "Cederberg", "Devil's Peak/devils peak" },
+			r = { "Swartberg", "Outeniqua", "Soutpansberg", "Waterberg", "Langeberg", "Amathole/amatola", "Hottentots Holland", "Maloti/maluti", "Mont-aux-Sources", "Champagne Castle", "Matroosberg", "Witteberg", "Sneeuberg", "Kompasberg", "Hex River Mountains", "Tsitsikamma", "Wolkberg", "Lebombo", "Thabana Ntlenyana", "Sentinel", "Cathedral Peak", "Giant's Castle/giants castle", "Simonsberg", "Helderberg", "Signal Hill", "Chapman's Peak/chapmans peak" } },
+		{ q = "Name one of South Africa's three capital cities", sa = true,
+			c = { "Pretoria/tshwane", "Cape Town" },
+			u = { "Bloemfontein/bloem/mangaung" },
+			r = {  } },
+	},
+	teens = {
+		{ q = "Name an element on the periodic table", sa = false,
+			c = { "Oxygen", "Hydrogen", "Carbon", "Gold", "Iron" },
+			u = { "Helium", "Nitrogen", "Silver", "Sodium", "Calcium", "Copper", "Neon" },
+			r = { "Lithium", "Beryllium", "Boron", "Fluorine", "Magnesium", "Aluminium/aluminum", "Silicon", "Phosphorus", "Sulfur/sulphur", "Chlorine", "Argon", "Potassium", "Titanium", "Chromium", "Manganese", "Cobalt", "Nickel", "Zinc", "Arsenic", "Bromine", "Krypton", "Platinum", "Mercury", "Lead", "Tin", "Uranium", "Plutonium", "Radon", "Iodine", "Xenon", "Tungsten", "Radium", "Polonium", "Francium", "Caesium/cesium", "Germanium", "Gallium", "Osmium", "Iridium", "Palladium", "Selenium", "Strontium", "Barium", "Vanadium", "Scandium", "Bismuth", "Thorium", "Einsteinium", "Nobelium", "Oganesson", "Tellurium", "Rubidium", "Zirconium", "Molybdenum", "Cadmium", "Indium", "Antimony", "Hafnium", "Tantalum", "Rhenium", "Thallium", "Astatine", "Actinium", "Americium", "Curium", "Californium", "Neptunium", "Fermium", "Mendelevium", "Lawrencium", "Rutherfordium", "Seaborgium", "Bohrium", "Hassium", "Meitnerium", "Darmstadtium", "Roentgenium", "Copernicium", "Nihonium", "Flerovium", "Moscovium", "Livermorium", "Tennessine", "Lanthanum", "Cerium", "Neodymium", "Europium", "Gadolinium", "Ytterbium", "Yttrium", "Niobium", "Ruthenium", "Rhodium", "Protactinium", "Promethium", "Samarium", "Terbium", "Dysprosium", "Holmium", "Erbium", "Thulium", "Lutetium", "Praseodymium", "Technetium", "Berkelium" } },
+		{ q = "Name a country in Europe", sa = false,
+			c = { "France", "Germany", "Italy", "Spain", "United Kingdom/uk/england/britain/great britain" },
+			u = { "Portugal", "Netherlands/holland", "Greece", "Ireland", "Sweden", "Norway", "Switzerland", "Belgium", "Poland", "Russia" },
+			r = { "Austria", "Denmark", "Finland", "Iceland", "Czechia/czech republic", "Slovakia", "Hungary", "Romania", "Bulgaria", "Croatia", "Serbia", "Bosnia and Herzegovina/bosnia", "Slovenia", "Montenegro", "Albania", "North Macedonia/macedonia", "Kosovo", "Moldova", "Ukraine", "Belarus", "Lithuania", "Latvia", "Estonia", "Luxembourg", "Liechtenstein", "Monaco", "Andorra", "San Marino", "Vatican City/vatican", "Malta", "Cyprus", "Scotland", "Wales", "Northern Ireland" } },
+		{ q = "Name a play by William Shakespeare", sa = false,
+			c = { "Romeo and Juliet", "Hamlet", "Macbeth" },
+			u = { "Othello", "King Lear", "A Midsummer Night's Dream/midsummer nights dream", "Julius Caesar", "The Tempest" },
+			r = { "Twelfth Night", "Much Ado About Nothing", "The Merchant of Venice", "The Taming of the Shrew", "As You Like It", "Richard III", "Richard II", "Henry V", "Henry IV", "Henry VI", "Henry VIII", "Antony and Cleopatra", "Coriolanus", "Titus Andronicus", "Timon of Athens", "Troilus and Cressida", "Cymbeline", "The Winter's Tale", "Measure for Measure", "All's Well That Ends Well", "The Comedy of Errors", "Love's Labour's Lost", "The Two Gentlemen of Verona", "The Merry Wives of Windsor", "Pericles", "King John" } },
+		{ q = "Name a programming language", sa = false,
+			c = { "Python", "Java", "JavaScript/js" },
+			u = { "C++", "C", "C#", "PHP", "Ruby", "Swift" },
+			r = { "Go/golang", "Rust", "Kotlin", "TypeScript", "Scala", "Perl", "Haskell", "Lua", "R", "MATLAB", "Fortran", "COBOL", "Pascal", "Lisp", "Assembly", "Dart", "Julia", "Elixir", "Erlang", "Clojure", "F#", "Objective-C", "Visual Basic/vb", "Scratch", "SQL", "Bash", "Prolog", "BASIC", "Zig", "OCaml", "Groovy", "Delphi", "Ada", "Smalltalk", "Solidity" } },
+		{ q = "Name a capital city in Asia", sa = false,
+			c = { "Tokyo", "Beijing", "New Delhi/delhi", "Bangkok" },
+			u = { "Seoul", "Singapore", "Manila", "Jakarta", "Kuala Lumpur", "Hanoi", "Islamabad", "Kabul", "Tehran" },
+			r = { "Dhaka", "Kathmandu", "Thimphu", "Colombo/sri jayawardenepura kotte", "Malé/male", "Naypyidaw", "Vientiane", "Phnom Penh", "Ulaanbaatar", "Pyongyang", "Bandar Seri Begawan", "Dili", "Tashkent", "Astana", "Bishkek", "Dushanbe", "Ashgabat", "Baghdad", "Riyadh", "Abu Dhabi", "Doha", "Muscat", "Sana'a/sanaa", "Amman", "Damascus", "Beirut", "Ankara", "Baku", "Tbilisi", "Yerevan", "Kuwait City", "Manama" } },
+		{ q = "Name an organ of the human body", sa = false,
+			c = { "Heart", "Brain", "Lungs", "Stomach", "Liver" },
+			u = { "Kidney", "Skin", "Intestines/small intestine/large intestine", "Bladder", "Pancreas" },
+			r = { "Spleen", "Gallbladder", "Appendix", "Thyroid", "Oesophagus/esophagus", "Uterus/womb", "Ovaries", "Thymus", "Adrenal glands", "Larynx", "Trachea/windpipe", "Colon", "Eye", "Tongue", "Diaphragm", "Pituitary gland", "Tonsils", "Rectum", "Testes", "Prostate" } },
+		{ q = "Name a Greek god or goddess", sa = false,
+			c = { "Zeus", "Poseidon", "Hades", "Athena" },
+			u = { "Apollo", "Aphrodite", "Ares", "Hermes", "Hera", "Artemis" },
+			r = { "Demeter", "Dionysus", "Hephaestus", "Hestia", "Persephone", "Eros", "Nike", "Hecate", "Pan", "Gaia", "Cronus/kronos", "Helios", "Selene", "Eos", "Nemesis", "Tyche", "Iris", "Morpheus", "Hypnos", "Thanatos", "Uranus", "Rhea", "Hebe", "Asclepius", "Atlas", "Prometheus", "Nyx", "Chaos", "Eris" } },
+		{ q = "Name a world currency", sa = false,
+			c = { "Dollar", "Euro", "Rand", "Pound" },
+			u = { "Yen", "Rupee", "Yuan/renminbi", "Franc", "Peso" },
+			r = { "Rouble/ruble", "Won", "Real", "Krona", "Krone", "Naira", "Shilling", "Dirham", "Riyal", "Lira", "Baht", "Ringgit", "Rupiah", "Dinar", "Kwacha", "Pula", "Cedi", "Zloty", "Forint", "Shekel", "Dong", "Lev", "Leu", "Koruna", "Kwanza", "Metical", "Birr", "Lilangeni", "Loti", "Rial", "Taka", "Hryvnia", "Bitcoin" } },
+		{ q = "Name a famous painter", sa = false,
+			c = { "Leonardo da Vinci/da vinci/leonardo", "Pablo Picasso/picasso", "Vincent van Gogh/van gogh" },
+			u = { "Michelangelo", "Claude Monet/monet", "Salvador Dalí/dali", "Frida Kahlo/kahlo", "Rembrandt" },
+			r = { "Raphael", "Andy Warhol/warhol", "Jackson Pollock/pollock", "Georgia O'Keeffe/okeeffe", "Henri Matisse/matisse", "Edvard Munch/munch", "Johannes Vermeer/vermeer", "Caravaggio", "Botticelli", "Gustav Klimt/klimt", "Paul Cézanne/cezanne", "Edgar Degas/degas", "Renoir", "Goya", "Turner", "Banksy", "Basquiat", "Irma Stern", "Gerard Sekoto", "Magritte", "Hokusai", "Kandinsky", "Mondrian", "El Greco", "Titian", "Seurat", "Gauguin", "Manet", "Hockney", "Rothko", "Velázquez/velazquez", "Tretchikoff", "Esther Mahlangu", "Bob Ross" } },
+		{ q = "Name a type of cloud", sa = false,
+			c = { "Cumulus", "Cirrus", "Stratus" },
+			u = { "Cumulonimbus", "Nimbostratus", "Altocumulus", "Nimbus" },
+			r = { "Altostratus", "Cirrocumulus", "Cirrostratus", "Stratocumulus", "Lenticular", "Mammatus", "Contrail", "Shelf cloud", "Noctilucent", "Pileus", "Asperitas", "Wall cloud", "Fog" } },
+		{ q = "Name a South African musician or band", sa = true,
+			c = { "Tyla", "Black Coffee", "Master KG", "Nasty C", "Cassper Nyovest" },
+			u = { "Lucky Dube", "Brenda Fassie", "Miriam Makeba", "Hugh Masekela", "Johnny Clegg", "Ladysmith Black Mambazo", "Die Antwoord", "Kabza De Small", "DJ Maphorisa", "AKA", "Sho Madjozi", "Zakes Bantwini", "Freshlyground", "Mafikizolo", "Mango Groove", "Prince Kaybee", "Sjava", "Uncle Waffles", "Focalistic", "Kamo Mphela" },
+			r = { "Seether", "Goldfish", "Jeremy Loops", "Mi Casa", "Mahlathini", "Mahotella Queens", "Abdullah Ibrahim", "Yvonne Chaka Chaka", "Arno Carstens", "Just Jinjer", "Springbok Nude Girls", "Watershed", "Prime Circle", "Desmond and the Tutus", "The Parlotones/parlotones", "Kurt Darren", "Karen Zoid", "Riky Rick", "K.O/ko", "Kwesta", "Busiswa", "Moonchild Sanelly", "Lira", "Zahara", "Simphiwe Dana", "Thandiswa Mazwai", "Babes Wodumo", "Young Stunna", "Lady Zamar", "Ami Faku", "Msaki", "Sun-El Musician", "Big Nuz", "Trompies", "TKZee", "Mandoza", "Bongo Maffin", "Boom Shaka", "PJ Powers", "Danny K", "Shekhinah", "Elaine", "Bok van Blerk", "Emtee", "Blaq Diamond", "Kelly Khumalo", "Makhadzi" } },
+		{ q = "Name a UNESCO World Heritage Site in South Africa", sa = true,
+			c = { "Robben Island", "Cradle of Humankind/sterkfontein/maropeng", "iSimangaliso Wetland Park/isimangaliso/st lucia" },
+			u = { "Mapungubwe", "Maloti-Drakensberg Park/drakensberg", "Cape Floral Region/cape floral kingdom", "Vredefort Dome/vredefort crater" },
+			r = { "Richtersveld", "Khomani Cultural Landscape/khomani", "Barberton Makhonjwa Mountains/barberton", "Nelson Mandela Legacy Sites", "Pleistocene occupation sites/pinnacle point/sibhudu/diepkloof" } },
+		{ q = "Name a president of South Africa since 1994", sa = true,
+			c = { "Nelson Mandela/mandela", "Cyril Ramaphosa/ramaphosa" },
+			u = { "Jacob Zuma/zuma", "Thabo Mbeki/mbeki" },
+			r = { "Kgalema Motlanthe/motlanthe" } },
+		{ q = "Name a South African university", sa = true,
+			c = { "Wits/university of the witwatersrand/witwatersrand", "UCT/university of cape town", "Stellenbosch/maties/stellenbosch university", "University of Pretoria/tuks/up" },
+			u = { "UJ/university of johannesburg", "UKZN/university of kwazulu-natal", "Rhodes/rhodes university", "UNISA/university of south africa", "North-West University/nwu", "University of the Free State/ufs/kovsies" },
+			r = { "Nelson Mandela University/nmu", "UWC/university of the western cape", "CPUT/cape peninsula university of technology", "TUT/tshwane university of technology", "Fort Hare/university of fort hare", "University of Limpopo", "Univen/university of venda", "Walter Sisulu University/wsu", "Unizulu/university of zululand", "DUT/durban university of technology", "CUT/central university of technology", "VUT/vaal university of technology", "MUT/mangosuthu university of technology", "University of Mpumalanga", "Sol Plaatje University", "Sefako Makgatho/smu" } },
+		{ q = "Name a South African national park", sa = true,
+			c = { "Kruger", "Table Mountain", "Addo Elephant/addo" },
+			u = { "Kgalagadi/kalahari gemsbok", "Golden Gate", "Garden Route/tsitsikamma", "Karoo" },
+			r = { "Augrabies Falls/augrabies", "Mapungubwe", "Mountain Zebra", "Camdeboo", "Marakele", "Agulhas", "West Coast", "Bontebok", "Tankwa Karoo/tankwa", "Namaqua", "Richtersveld/ai-ais richtersveld", "Mokala", "Meerkat" } },
+		{ q = "Name a South African slang word", sa = true,
+			c = { "Lekker", "Howzit", "Eish", "Ja", "Now now", "Just now", "Robot" },
+			u = { "Bakkie", "Shame", "Sharp/sharp sharp", "Yebo", "Boet", "Bru", "Jol", "Kif/kief", "Aweh", "Hayibo", "Sho", "Skinner", "Ag", "Tannie", "Oom", "Braai" },
+			r = { "Takkies", "Slap chips", "Dorp", "Padkos", "Stoep", "Dwaal", "Indaba", "Larney", "Kasi", "Ubuntu", "Chommie", "Mlungu", "Eina", "Ou", "Jislaaik/jislaik", "Snoek", "Tjoepstil", "Hundreds", "Lus", "Vrot", "Spaza", "Ayoba" } },
+	},
+	adults = {
+		{ q = "Name a US president", sa = false,
+			c = { "Abraham Lincoln/lincoln", "George Washington/washington", "Barack Obama/obama", "Donald Trump/trump", "Joe Biden/biden" },
+			u = { "John F. Kennedy/jfk/kennedy/john f kennedy", "Franklin D. Roosevelt/fdr/franklin roosevelt", "Theodore Roosevelt/teddy roosevelt/roosevelt", "Ronald Reagan/reagan", "Bill Clinton/clinton", "George W. Bush/george w bush/bush", "Thomas Jefferson/jefferson" },
+			r = { "John Adams/adams", "James Madison/madison", "James Monroe/monroe", "John Quincy Adams", "Andrew Jackson/jackson", "Martin Van Buren/van buren", "William Henry Harrison", "John Tyler/tyler", "James K. Polk/polk/james polk", "Zachary Taylor", "Millard Fillmore/fillmore", "Franklin Pierce/pierce", "James Buchanan/buchanan", "Andrew Johnson", "Ulysses S. Grant/grant/ulysses grant", "Rutherford B. Hayes/hayes", "James Garfield/garfield", "Chester Arthur", "Grover Cleveland/cleveland", "Benjamin Harrison", "William McKinley/mckinley", "William Howard Taft/taft", "Woodrow Wilson/wilson", "Warren Harding/harding", "Calvin Coolidge/coolidge", "Herbert Hoover/hoover", "Harry Truman/truman", "Dwight Eisenhower/eisenhower", "Lyndon B. Johnson/lbj/lyndon johnson", "Richard Nixon/nixon", "Gerald Ford", "Jimmy Carter/carter", "George H. W. Bush/george hw bush" } },
+		{ q = "Name a capital city in South America", sa = false,
+			c = { "Buenos Aires", "Brasília/brasilia", "Lima" },
+			u = { "Santiago", "Bogotá/bogota", "Caracas", "Quito" },
+			r = { "Montevideo", "Asunción/asuncion", "La Paz", "Sucre", "Georgetown", "Paramaribo" } },
+		{ q = "Name a novel by Charles Dickens", sa = false,
+			c = { "Oliver Twist", "A Christmas Carol", "Great Expectations" },
+			u = { "A Tale of Two Cities", "David Copperfield" },
+			r = { "Bleak House", "Hard Times", "Little Dorrit", "Nicholas Nickleby", "The Pickwick Papers", "Our Mutual Friend", "Dombey and Son", "Martin Chuzzlewit", "The Old Curiosity Shop", "Barnaby Rudge", "The Mystery of Edwin Drood" } },
+		{ q = "Name a Nobel Prize category", sa = false,
+			c = { "Peace", "Literature", "Physics" },
+			u = { "Chemistry", "Medicine/physiology or medicine/physiology" },
+			r = { "Economics/economic sciences" } },
+		{ q = "Name a philosopher", sa = false,
+			c = { "Socrates", "Plato", "Aristotle", "Friedrich Nietzsche/nietzsche" },
+			u = { "Immanuel Kant/kant", "René Descartes/descartes", "Confucius", "Karl Marx/marx", "John Locke/locke", "Jean-Paul Sartre/sartre" },
+			r = { "David Hume/hume", "Thomas Hobbes/hobbes", "Spinoza", "Leibniz", "Hegel", "Kierkegaard", "Schopenhauer", "Wittgenstein", "John Stuart Mill/mill", "Rousseau", "Voltaire", "Simone de Beauvoir/de beauvoir", "Albert Camus/camus", "Michel Foucault/foucault", "Heidegger", "Epicurus", "Seneca", "Marcus Aurelius", "Diogenes", "Pythagoras", "Heraclitus", "Laozi/lao tzu", "Mencius", "Machiavelli", "Thomas Aquinas/aquinas", "Augustine", "Bertrand Russell/russell", "Hannah Arendt/arendt", "Jacques Derrida/derrida", "Jeremy Bentham/bentham", "Adam Smith", "Montesquieu", "Zeno", "Epictetus", "Avicenna", "Averroes", "Francis Bacon", "Ayn Rand", "Noam Chomsky", "Slavoj Žižek/zizek", "Cicero", "Parmenides", "Thales" } },
+		{ q = "Name a country that borders Germany", sa = false,
+			c = { "France", "Poland", "Austria", "Switzerland" },
+			u = { "Netherlands/holland", "Belgium", "Denmark", "Czechia/czech republic" },
+			r = { "Luxembourg" } },
+		{ q = "Name a bird that cannot fly", sa = false,
+			c = { "Penguin", "Ostrich", "Emu", "Kiwi" },
+			u = { "Dodo", "Cassowary", "Rhea", "Chicken" },
+			r = { "Kakapo", "Takahe", "Steamer duck", "Weka", "Moa", "Elephant bird", "Great auk", "Flightless cormorant", "Inaccessible Island rail" } },
+		{ q = "Name a member of The Beatles", sa = false,
+			c = { "John Lennon/lennon", "Paul McCartney/mccartney" },
+			u = { "Ringo Starr/ringo/starr", "George Harrison/harrison" },
+			r = { "Pete Best", "Stuart Sutcliffe/sutcliffe" } },
+		{ q = "Name a moon of Jupiter or Saturn", sa = false,
+			c = { "Titan", "Europa", "Io", "Ganymede" },
+			u = { "Callisto", "Enceladus" },
+			r = { "Mimas", "Rhea", "Iapetus", "Dione", "Tethys", "Hyperion", "Phoebe", "Amalthea", "Himalia", "Thebe", "Metis", "Pan", "Janus", "Epimetheus", "Prometheus", "Pandora", "Atlas", "Adrastea", "Elara", "Carme", "Pasiphae", "Sinope", "Lysithea", "Ananke", "Leda" } },
+		{ q = "Name a South African-born Nobel Prize winner", sa = false,
+			c = { "Nelson Mandela/mandela", "Desmond Tutu/tutu" },
+			u = { "F. W. de Klerk/de klerk/fw de klerk", "Albert Luthuli/luthuli/chief albert luthuli" },
+			r = { "Nadine Gordimer/gordimer", "J. M. Coetzee/coetzee/jm coetzee", "Sydney Brenner/brenner", "Allan Cormack/cormack", "Max Theiler/theiler", "Aaron Klug/klug", "Michael Levitt/levitt" } },
+		{ q = "Name a year the Springboks won the Rugby World Cup", sa = true,
+			c = { "1995", "2023" },
+			u = { "2019" },
+			r = { "2007" } },
+		{ q = "Name a South African author", sa = true,
+			c = { "J. M. Coetzee/jm coetzee/coetzee", "Nadine Gordimer/gordimer", "Alan Paton/paton" },
+			u = { "Athol Fugard/fugard", "Zakes Mda/mda", "Damon Galgut/galgut", "Deon Meyer", "Wilbur Smith", "Trevor Noah", "Antjie Krog/krog", "André Brink/andre brink", "Breyten Breytenbach" },
+			r = { "Sindiwe Magona", "Bessie Head", "Olive Schreiner/schreiner", "Herman Charles Bosman/bosman", "Es'kia Mphahlele/mphahlele", "Mongane Wally Serote/serote", "Njabulo Ndebele", "Lauren Beukes", "Marlene van Niekerk", "Etienne van Heerden", "Ivan Vladislavić/vladislavic", "Sol Plaatje/plaatje", "Lewis Nkosi", "Can Themba", "Miriam Tlali", "Kopano Matlwa", "Niq Mhlongo", "Phaswane Mpe", "K. Sello Duiker/sello duiker", "Achmat Dangor", "Zoë Wicomb/zoe wicomb", "Rian Malan", "Gcina Mhlophe", "J. R. R. Tolkien/tolkien", "Ingrid Jonker", "N. P. van Wyk Louw", "Eugène Marais/eugene marais", "Pieter-Dirk Uys", "Mark Behr", "Margie Orford", "Sisonke Msimang", "Redi Tlhabi", "Jacques Pauw", "Max du Preez", "Mandla Langa", "Fred Khumalo", "Elleke Boehmer" } },
+		{ q = "Name a South African-born actor or filmmaker", sa = true,
+			c = { "Charlize Theron/theron", "Trevor Noah", "Sharlto Copley/copley" },
+			u = { "Arnold Vosloo/vosloo", "Embeth Davidtz/davidtz", "Neill Blomkamp/blomkamp", "Thuso Mbedu/mbedu", "Pearl Thusi", "Nomzamo Mbatha", "John Kani", "Gavin Hood", "Jamie Uys", "Leon Schuster/schuster" },
+			r = { "Basil Rathbone/rathbone", "Glynis Johns", "Sid James", "Terry Pheto", "Presley Chweneyagae", "Connie Ferguson", "Atandwa Kani", "Jamie Bartlett", "Nambitha Ben-Mazwi", "Bonko Khoza", "Zola Nombona", "Thando Thabethe", "Oliver Hermanus", "Dean Geyer", "Janet Suzman", "Antony Sher", "Brümilda van Rensburg" } },
+		{ q = "Name a big South African company or brand", sa = true,
+			c = { "Shoprite/checkers", "MTN", "Sasol", "Eskom", "Woolworths/woolies", "Nando's/nandos", "Standard Bank" },
+			u = { "Vodacom", "Capitec", "FirstRand/fnb/first national bank", "Discovery", "Pick n Pay", "Absa", "Nedbank", "Sanlam", "Old Mutual", "Naspers", "Transnet", "Steers", "Chicken Licken", "Spur", "Mr Price", "Clicks", "Telkom", "Takealot", "Tiger Brands", "Bidvest", "Pep", "SAA/south african airways" },
+			r = { "Sibanye-Stillwater/sibanye", "Implats/impala platinum", "Gold Fields", "Harmony Gold/harmony", "Kumba Iron Ore/kumba", "Exxaro", "Remgro", "Aspen", "Netcare", "Life Healthcare", "Spar", "TFG/foschini", "Truworths", "Pepkor", "Growthpoint", "Investec", "Santam", "Momentum", "PSG", "Super Group", "Reunert", "Bidcorp", "AVI", "RCL Foods", "Astral", "Famous Brands", "Italtile", "Motus", "Dis-Chem", "Coronation", "Sappi", "Thungela", "African Rainbow Minerals/arm", "Northam Platinum/northam", "Omnia", "AECI", "Tsogo Sun", "Sun International", "Hyprop", "Pioneer Foods", "Ackermans", "Builders/builders warehouse", "Game", "Makro", "Debonairs", "Wimpy", "Ocean Basket", "Mugg & Bean/mugg and bean", "Simba", "Ouma", "Mrs Ball's/mrs balls", "Kreepy Krauly", "Pratley", "Mr D", "Checkers Sixty60/sixty60", "TymeBank", "Outsurance", "Hollard", "Liberty", "Multichoice/dstv", "Showmax", "Cell C", "Rain", "Kulula", "FlySafair", "Gautrain", "Prasa", "Denel", "Rand Water", "De Beers", "Anglo American", "Toyota SA" } },
+		{ q = "Name a battle fought on South African soil", sa = true,
+			c = { "Isandlwana", "Blood River/ncome", "Rorke's Drift/rorkes drift" },
+			u = { "Spioenkop/spion kop", "Majuba/majuba hill", "Ulundi", "Magersfontein" },
+			r = { "Colenso", "Elandslaagte", "Talana Hill/talana", "Modder River", "Paardeberg", "Vegkop", "Belmont", "Stormberg", "Siege of Ladysmith/ladysmith", "Siege of Mafeking/mafeking/mahikeng", "Siege of Kimberley/kimberley", "Bergendal", "Boomplaats", "Italeni", "Gingindlovu", "Hlobane", "Kambula", "Intombe", "Wagon Hill", "Vaalkrantz", "Tugela Heights", "Sannas Post", "Diamond Hill", "Bothaville", "Blaauwberg/blouberg", "Muizenberg" } },
+		{ q = "Name a South African provincial capital", sa = true,
+			c = { "Johannesburg", "Cape Town", "Bloemfontein" },
+			u = { "Pietermaritzburg", "Polokwane", "Kimberley" },
+			r = { "Bhisho/bisho", "Mbombela/nelspruit", "Mahikeng/mafikeng" } },
+	},
+}
+
+return Q
+]]></ProtectedString></Properties></Item>
+</Item>
+<Item class="ServerScriptService" referent="RBX0006"><Properties><string name="Name">ServerScriptService</string></Properties>
+<Item class="Script" referent="RBX0007"><Properties><string name="Name">BrainwaveServer</string><ProtectedString name="Source"><![CDATA[-- Brainwave (Roblox) — server
+-- Lives in ServerScriptService. Picks the daily prompts, checks every answer on the
+-- server (so scores can't be faked), runs the timer, and saves profiles and
+-- daily leaderboards in DataStores.
+
+local Players = game:GetService("Players")
+local DataStoreService = game:GetService("DataStoreService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+
+local Q = require(ReplicatedStorage:WaitForChild("BrainwaveQuestions"))
+
+local remotes = Instance.new("Folder")
+remotes.Name = "BrainwaveRemotes"
+remotes.Parent = ReplicatedStorage
+local Api = Instance.new("RemoteFunction")
+Api.Name = "Api"
+Api.Parent = remotes
+
+local ROUND = 7
+local MAX_SCORE = 350
+local PTS = { c = 10, u = 25, r = 50, x = 0 }
+local TIME = { kids = 40, juniors = 30, teens = 25, adults = 20 }
+local GRACE = 3 -- seconds of network allowance on the timer
+local EPOCH = 1794787200 -- 2026-11-16 00:00 UTC = round #1
+
+local profileStore = DataStoreService:GetDataStore("BrainwaveProfiles_v1")
+
+---------------------------------------------------------------- dates
+local function today() return os.date("!%Y-%m-%d") end
+local function yesterday() return os.date("!%Y-%m-%d", os.time() - 86400) end
+local function dayNum() return math.floor((os.time() - EPOCH) / 86400) + 1 end
+
+---------------------------------------------------------------- matching
+local ACCENTS = {
+	["á"]="a",["à"]="a",["â"]="a",["ä"]="a",["ã"]="a",["å"]="a",
+	["é"]="e",["è"]="e",["ê"]="e",["ë"]="e",
+	["í"]="i",["ì"]="i",["î"]="i",["ï"]="i",
+	["ó"]="o",["ò"]="o",["ô"]="o",["ö"]="o",["õ"]="o",
+	["ú"]="u",["ù"]="u",["û"]="u",["ü"]="u",
+	["ç"]="c",["ć"]="c",["č"]="c",["ñ"]="n",["ž"]="z",["š"]="s",
+	["É"]="e",["Á"]="a",["Ö"]="o",["Ü"]="u",
+}
+
+local function key(s)
+	s = string.lower(s)
+	for from, to in pairs(ACCENTS) do
+		s = string.gsub(s, from, to)
+	end
+	s = string.gsub(s, "&", " and ")
+	s = string.gsub(s, "[%-_%.]", " ")
+	s = string.gsub(s, "[^%w%+# ]", "")
+	s = string.gsub(s, "%s+", " ")
+	s = string.gsub(s, "^%s+", "")
+	s = string.gsub(s, "%s+$", "")
+	if string.sub(s, 1, 4) == "the " then s = string.sub(s, 5)
+	elseif string.sub(s, 1, 3) == "an " then s = string.sub(s, 4)
+	elseif string.sub(s, 1, 2) == "a " then s = string.sub(s, 3) end
+	s = string.gsub(s, " ", "")
+	return s
+end
+
+local function stripPlural(x)
+	if string.sub(x, -2) == "es" then return string.sub(x, 1, -3) end
+	if string.sub(x, -1) == "s" then return string.sub(x, 1, -2) end
+	return x
+end
+
+local function lev(a, b)
+	if math.abs(#a - #b) > 2 then return 9 end
+	local prev = {}
+	for j = 0, #b do prev[j] = j end
+	for i = 1, #a do
+		local cur = { [0] = i }
+		local ca = string.byte(a, i)
+		for j = 1, #b do
+			local cost = (ca == string.byte(b, j)) and 0 or 1
+			cur[j] = math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost)
+		end
+		prev = cur
+	end
+	return prev[#b]
+end
+
+local parsedCache = {}
+local function parsePrompt(p)
+	if parsedCache[p] then return parsedCache[p] end
+	local list = {}
+	for _, tier in ipairs({ "c", "u", "r" }) do
+		for _, entry in ipairs(p[tier]) do
+			local aliases = string.split(entry, "/")
+			local keys = {}
+			for _, al in ipairs(aliases) do table.insert(keys, key(al)) end
+			table.insert(list, { show = aliases[1], tier = tier, keys = keys })
+		end
+	end
+	parsedCache[p] = list
+	return list
+end
+
+local function judge(p, input)
+	local k = key(input)
+	if k == "" then return nil end
+	local list = parsePrompt(p)
+	local sk = stripPlural(k)
+	for _, a in ipairs(list) do
+		for _, x in ipairs(a.keys) do
+			if x == k or stripPlural(x) == sk then return a end
+		end
+	end
+	if #k >= 5 then
+		local tol = (#k >= 9) and 2 or 1
+		local best, bd = nil, 9
+		for _, a in ipairs(list) do
+			for _, x in ipairs(a.keys) do
+				if #x >= 4 then
+					local d = lev(k, x)
+					if d < bd then bd, best = d, a end
+				end
+			end
+		end
+		if bd <= tol then return best end
+	end
+	return nil
+end
+
+local function reveal(p)
+	local out = { c = {}, u = {}, r = {}, more = 0 }
+	for _, a in ipairs(parsePrompt(p)) do
+		if a.tier == "r" and #out.r >= 6 then
+			out.more += 1
+		else
+			table.insert(out[a.tier], a.show)
+		end
+	end
+	return out
+end
+
+---------------------------------------------------------------- picking prompts
+local function hash(s)
+	local h = 5381
+	for i = 1, #s do h = (h * 33 + string.byte(s, i)) % 2147483647 end
+	return h
+end
+
+local function shuffled(t, rng)
+	local a = table.clone(t)
+	for i = #a, 2, -1 do
+		local j = rng:NextInteger(1, i)
+		a[i], a[j] = a[j], a[i]
+	end
+	return a
+end
+
+local function pick(age, seed)
+	local rng = seed and Random.new(hash(seed)) or Random.new()
+	local sa, other = {}, {}
+	for _, p in ipairs(Q.BANK[age]) do
+		table.insert(p.sa and sa or other, p)
+	end
+	sa, other = shuffled(sa, rng), shuffled(other, rng)
+	local nSa = math.min(#sa, 3 + rng:NextInteger(0, 1)) -- 3 or 4 South Africa prompts
+	local chosen = {}
+	for i = 1, nSa do table.insert(chosen, sa[i]) end
+	for i = 1, ROUND - nSa do table.insert(chosen, other[i]) end
+	return shuffled(chosen, rng)
+end
+
+---------------------------------------------------------------- profiles
+local profiles = {}  -- [player] = profile table
+local sessions = {}  -- [player] = current round
+
+local function defaultProfile()
+	return { age = nil, best = 0, days = 0, streak = 0, lastDay = nil, todayScore = nil, todayTiers = nil }
+end
+
+local function loadProfile(player)
+	local data
+	for attempt = 1, 3 do
+		local ok, res = pcall(function() return profileStore:GetAsync("u" .. player.UserId) end)
+		if ok then data = res break end
+		task.wait(1)
+	end
+	local p = defaultProfile()
+	if type(data) == "table" then
+		for k, v in pairs(data) do p[k] = v end
+	end
+	return p
+end
+
+local function saveProfile(player)
+	local p = profiles[player]
+	if not p then return end
+	pcall(function()
+		profileStore:SetAsync("u" .. player.UserId, p)
+	end)
+end
+
+local function setLeaderstats(player)
+	local p = profiles[player]
+	local ls = player:FindFirstChild("leaderstats")
+	if not (p and ls) then return end
+	ls.Today.Value = (p.lastDay == today() and p.todayScore) or 0
+	ls.Streak.Value = p.streak or 0
+end
+
+local function canReset(player)
+	return RunService:IsStudio() or player.UserId == game.CreatorId
+end
+
+local function publicProfile(player)
+	local p = profiles[player]
+	local t = today()
+	local streak = p.streak or 0
+	if p.lastDay ~= t and p.lastDay ~= yesterday() then streak = 0 end
+	return {
+		age = p.age, best = p.best, days = p.days, streak = streak,
+		doneToday = (p.lastDay == t and p.todayScore ~= nil),
+		todayScore = (p.lastDay == t) and p.todayScore or nil,
+		dayNum = dayNum(), canReset = canReset(player),
+		name = player.DisplayName,
+	}
+end
+
+---------------------------------------------------------------- leaderboards
+local boardCache = {} -- [storeName] = { at = clock, rows = {} }
+local nameCache = {}
+
+local function boardName(day, age) return "BW_" .. day .. "_" .. age end
+
+local function writeBoards(player, score)
+	local t = today()
+	local age = profiles[player].age
+	for _, scope in ipairs({ age, "all" }) do
+		pcall(function()
+			DataStoreService:GetOrderedDataStore(boardName(t, scope)):SetAsync(tostring(player.UserId), score)
+		end)
+		boardCache[boardName(t, scope)] = nil
+	end
+end
+
+local function nameFor(userId)
+	if nameCache[userId] then return nameCache[userId] end
+	local plr = Players:GetPlayerByUserId(userId)
+	if plr then nameCache[userId] = plr.DisplayName return plr.DisplayName end
+	local ok, n = pcall(function() return Players:GetNameFromUserIdAsync(userId) end)
+	nameCache[userId] = ok and n or "Player"
+	return nameCache[userId]
+end
+
+local function readBoard(scope)
+	local name = boardName(today(), scope)
+	local cached = boardCache[name]
+	if cached and os.clock() - cached.at < 20 then return cached.rows end
+	local rows = {}
+	local ok = pcall(function()
+		local pages = DataStoreService:GetOrderedDataStore(name):GetSortedAsync(false, scope == "all" and 20 or 10)
+		for _, e in ipairs(pages:GetCurrentPage()) do
+			local uid = tonumber(e.key)
+			table.insert(rows, { userId = uid, name = nameFor(uid), score = e.value })
+		end
+	end)
+	if ok then boardCache[name] = { at = os.clock(), rows = rows } end
+	return rows
+end
+
+---------------------------------------------------------------- API
+local handlers = {}
+
+local function questionPayload(player)
+	local s = sessions[player]
+	local p = s.prompts[s.i]
+	s.tries = 0
+	s.deadline = os.clock() + s.time
+	return { index = s.i, total = ROUND, q = p.q, time = s.time, score = s.score, daily = s.daily, dayNum = dayNum() }
+end
+
+function handlers.profile(player)
+	return { ok = true, profile = publicProfile(player) }
+end
+
+function handlers.setAge(player, age)
+	if type(age) ~= "string" or not Q.AGES[age] then return { error = "Pick an age group" } end
+	if sessions[player] then return { error = "Finish your round first" } end
+	profiles[player].age = age
+	task.spawn(saveProfile, player)
+	return { ok = true, profile = publicProfile(player) }
+end
+
+function handlers.start(player, daily)
+	local p = profiles[player]
+	if not p.age then return { error = "Pick an age group first" } end
+	daily = daily == true
+	if daily and p.lastDay == today() then return { error = "You've already played today's round" } end
+	local seed = daily and (today() .. ":" .. p.age) or nil
+	sessions[player] = {
+		daily = daily, age = p.age, prompts = pick(p.age, seed),
+		i = 1, score = 0, tiers = {}, results = {}, time = TIME[p.age] or 25,
+	}
+	return { ok = true, question = questionPayload(player) }
+end
+
+function handlers.answer(player, arg)
+	local s = sessions[player]
+	if not s or s.answered then return { error = "No question open" } end
+	arg = type(arg) == "table" and arg or {}
+	local text = type(arg.text) == "string" and string.sub(arg.text, 1, 60) or ""
+	local late = os.clock() > s.deadline + GRACE
+	local timeout = arg.timeout == true or late
+	local p = s.prompts[s.i]
+	local hit = (not late) and judge(p, text) or nil
+
+	if not hit and not timeout and text ~= "" and s.tries == 0 and arg.skip ~= true then
+		s.tries = 1
+		return { ok = true, retry = true }
+	end
+
+	local tier = hit and hit.tier or "x"
+	s.score += PTS[tier]
+	table.insert(s.tiers, tier)
+	table.insert(s.results, { q = p.q, show = hit and hit.show or nil, tier = tier })
+	s.answered = true
+	return {
+		ok = true, tier = tier, show = hit and hit.show or nil, points = PTS[tier],
+		score = s.score, timeout = timeout and not hit, reveal = reveal(p), last = (s.i == ROUND),
+	}
+end
+
+function handlers.next(player)
+	local s = sessions[player]
+	if not s or not s.answered or s.i >= ROUND then return { error = "Nothing to move to" } end
+	s.i += 1
+	s.answered = false
+	return { ok = true, question = questionPayload(player) }
+end
+
+function handlers.finish(player)
+	local s = sessions[player]
+	if not s or #s.tiers < ROUND then return { error = "Round not finished" } end
+	sessions[player] = nil
+	local p = profiles[player]
+	local saved = false
+	if s.daily and p.lastDay ~= today() then
+		local score = math.clamp(s.score, 0, MAX_SCORE)
+		p.streak = (p.lastDay == yesterday()) and ((p.streak or 0) + 1) or 1
+		p.lastDay = today()
+		p.todayScore = score
+		p.todayTiers = table.concat(s.tiers)
+		p.days = (p.days or 0) + 1
+		p.best = math.max(p.best or 0, score)
+		task.spawn(saveProfile, player)
+		task.spawn(writeBoards, player, score)
+		setLeaderstats(player)
+		saved = true
+	end
+	return { ok = true, score = s.score, tiers = s.tiers, results = s.results, daily = s.daily, saved = saved, profile = publicProfile(player) }
+end
+
+function handlers.leaderboard(player, scope)
+	local p = profiles[player]
+	scope = (scope == "all") and "all" or p.age
+	if not scope then return { ok = true, rows = {} } end
+	local rows = readBoard(scope)
+	-- Show this player's own fresh score straight away, even before the store catches up.
+	if p.lastDay == today() and p.todayScore and (scope == "all" or scope == p.age) then
+		local found = false
+		for _, r in ipairs(rows) do if r.userId == player.UserId then found = true end end
+		if not found then
+			rows = table.clone(rows)
+			table.insert(rows, { userId = player.UserId, name = player.DisplayName, score = p.todayScore })
+			table.sort(rows, function(a, b) return a.score > b.score end)
+		end
+	end
+	return { ok = true, rows = rows, scope = scope }
+end
+
+function handlers.resetToday(player)
+	if not canReset(player) then return { error = "Not allowed" } end
+	local p = profiles[player]
+	p.lastDay, p.todayScore, p.todayTiers = nil, nil, nil
+	sessions[player] = nil
+	task.spawn(saveProfile, player)
+	for _, scope in ipairs({ p.age or "all", "all" }) do
+		pcall(function()
+			DataStoreService:GetOrderedDataStore(boardName(today(), scope)):RemoveAsync(tostring(player.UserId))
+		end)
+		boardCache[boardName(today(), scope)] = nil
+	end
+	setLeaderstats(player)
+	return { ok = true, profile = publicProfile(player) }
+end
+
+Api.OnServerInvoke = function(player, action, arg)
+	if not profiles[player] then
+		local t0 = os.clock()
+		while not profiles[player] and os.clock() - t0 < 10 do task.wait(0.2) end
+		if not profiles[player] then return { error = "Still loading — try again" } end
+	end
+	local fn = handlers[action]
+	if not fn then return { error = "Unknown action" } end
+	local ok, res = pcall(fn, player, arg)
+	if not ok then
+		warn("[Brainwave]", action, res)
+		return { error = "Something went wrong" }
+	end
+	return res
+end
+
+---------------------------------------------------------------- players
+local function onPlayerAdded(player)
+	local ls = Instance.new("Folder")
+	ls.Name = "leaderstats"
+	local todayV = Instance.new("IntValue"); todayV.Name = "Today"; todayV.Parent = ls
+	local streakV = Instance.new("IntValue"); streakV.Name = "Streak"; streakV.Parent = ls
+	ls.Parent = player
+
+	profiles[player] = loadProfile(player)
+	setLeaderstats(player)
+end
+Players.PlayerAdded:Connect(onPlayerAdded)
+for _, plr in ipairs(Players:GetPlayers()) do task.spawn(onPlayerAdded, plr) end
+
+Players.PlayerRemoving:Connect(function(player)
+	saveProfile(player)
+	profiles[player] = nil
+	sessions[player] = nil
+end)
+
+game:BindToClose(function()
+	for _, player in ipairs(Players:GetPlayers()) do saveProfile(player) end
+end)
+]]></ProtectedString></Properties></Item>
+</Item>
+<Item class="StarterPlayer" referent="RBX0008"><Properties><string name="Name">StarterPlayer</string></Properties>
+<Item class="StarterPlayerScripts" referent="RBX0009"><Properties><string name="Name">StarterPlayerScripts</string></Properties>
+<Item class="LocalScript" referent="RBX0010"><Properties><string name="Name">BrainwaveClient</string><ProtectedString name="Source"><![CDATA[-- Brainwave (Roblox) — client
+-- Lives in StarterPlayer > StarterPlayerScripts. Builds the whole quiz UI in code.
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+local Q = require(ReplicatedStorage:WaitForChild("BrainwaveQuestions"))
+local Api = ReplicatedStorage:WaitForChild("BrainwaveRemotes"):WaitForChild("Api")
+
+---------------------------------------------------------------- style
+local C = {
+	bg = Color3.fromRGB(13, 27, 42), card = Color3.fromRGB(23, 46, 70), deep = Color3.fromRGB(13, 27, 42),
+	line = Color3.fromRGB(37, 66, 95), ink = Color3.fromRGB(238, 243, 248), muted = Color3.fromRGB(157, 176, 196),
+	accent = Color3.fromRGB(255, 122, 138), accent2 = Color3.fromRGB(255, 180, 162), dark = Color3.fromRGB(42, 11, 18),
+	c = Color3.fromRGB(62, 207, 142), u = Color3.fromRGB(74, 168, 255), r = Color3.fromRGB(192, 132, 252),
+	x = Color3.fromRGB(91, 107, 124), danger = Color3.fromRGB(255, 93, 108),
+}
+local TIERNAME = { c = "Common", u = "Uncommon", r = "Rare", x = "No points" }
+local HEX = { c = "#3ecf8e", u = "#4aa8ff", r = "#c084fc" }
+local BOLD = Enum.Font.GothamBold
+local MED = Enum.Font.GothamMedium
+local REG = Enum.Font.Gotham
+
+local function make(class, props, children)
+	local o = Instance.new(class)
+	for k, v in pairs(props or {}) do
+		if k ~= "Parent" then o[k] = v end
+	end
+	for _, ch in ipairs(children or {}) do ch.Parent = o end
+	if props and props.Parent then o.Parent = props.Parent end
+	return o
+end
+local function corner(r) return make("UICorner", { CornerRadius = UDim.new(0, r or 14) }) end
+local function stroke(col) return make("UIStroke", { Color = col or C.line, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }) end
+local function pad(n) return make("UIPadding", { PaddingTop = UDim.new(0, n), PaddingBottom = UDim.new(0, n), PaddingLeft = UDim.new(0, n), PaddingRight = UDim.new(0, n) }) end
+local function list(gap, align)
+	return make("UIListLayout", { Padding = UDim.new(0, gap or 10), SortOrder = Enum.SortOrder.LayoutOrder, HorizontalAlignment = align or Enum.HorizontalAlignment.Center })
+end
+
+local order = 0
+local function nextOrder() order += 1 return order end
+
+local function label(text, size, font, color, props)
+	local p = {
+		BackgroundTransparency = 1, Text = text, TextSize = size or 16, Font = font or REG,
+		TextColor3 = color or C.ink, TextWrapped = true, AutomaticSize = Enum.AutomaticSize.Y,
+		Size = UDim2.new(1, 0, 0, 0), TextXAlignment = Enum.TextXAlignment.Left, LayoutOrder = nextOrder(),
+	}
+	for k, v in pairs(props or {}) do p[k] = v end
+	return make("TextLabel", p)
+end
+
+local function button(text, primary, props)
+	local p = {
+		Text = text, TextSize = 18, Font = BOLD, AutoButtonColor = true,
+		BackgroundColor3 = primary and C.accent or C.card, TextColor3 = primary and C.dark or C.ink,
+		Size = UDim2.new(1, 0, 0, 50), LayoutOrder = nextOrder(),
+	}
+	for k, v in pairs(props or {}) do p[k] = v end
+	local b = make("TextButton", p, { corner(14) })
+	if not primary then stroke().Parent = b end
+	return b
+end
+
+local function card(parent, props)
+	local p = {
+		BackgroundColor3 = C.card, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y,
+		LayoutOrder = nextOrder(), Parent = parent,
+	}
+	for k, v in pairs(props or {}) do p[k] = v end
+	return make("Frame", p, { corner(18), stroke(), pad(18), list(10) })
+end
+
+---------------------------------------------------------------- root
+local gui = make("ScreenGui", { Name = "Brainwave", ResetOnSpawn = false, IgnoreGuiInset = true, ZIndexBehavior = Enum.ZIndexBehavior.Sibling, Parent = player:WaitForChild("PlayerGui") })
+make("Frame", { BackgroundColor3 = C.bg, Size = UDim2.fromScale(1, 1), Parent = gui }, {
+	make("UIGradient", { Rotation = 90, Color = ColorSequence.new(Color3.fromRGB(29, 59, 92), C.bg) }),
+})
+
+local shell = make("ScrollingFrame", {
+	BackgroundTransparency = 1, AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 0),
+	Size = UDim2.new(1, 0, 1, 0), CanvasSize = UDim2.new(), AutomaticCanvasSize = Enum.AutomaticSize.Y,
+	ScrollBarThickness = 4, ScrollBarImageColor3 = C.line, BorderSizePixel = 0, Parent = gui,
+}, { make("UIPadding", { PaddingTop = UDim.new(0, 54), PaddingBottom = UDim.new(0, 40) }) })
+
+local col = make("Frame", {
+	BackgroundTransparency = 1, AnchorPoint = Vector2.new(0.5, 0), Position = UDim2.new(0.5, 0, 0, 0),
+	Size = UDim2.new(1, -28, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, Parent = shell,
+}, { make("UISizeConstraint", { MaxSize = Vector2.new(520, math.huge) }), list(14) })
+
+-- header
+local header = make("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 40), LayoutOrder = nextOrder(), Parent = col })
+make("TextLabel", {
+	BackgroundTransparency = 1, RichText = true, Font = BOLD, TextSize = 28, TextColor3 = C.ink,
+	Text = 'Brain<font color="#ff7a8a">wave</font>', Size = UDim2.new(0.6, 0, 1, 0), TextXAlignment = Enum.TextXAlignment.Left, Parent = header,
+})
+local whoLabel = make("TextLabel", {
+	BackgroundTransparency = 1, Font = MED, TextSize = 13, TextColor3 = C.muted, Text = player.DisplayName,
+	AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, 0, 0, 0), Size = UDim2.new(0.4, 0, 1, 0),
+	TextXAlignment = Enum.TextXAlignment.Right, Parent = header,
+})
+
+local screens = {}
+local function screen(name)
+	local f = make("Frame", { Name = name, BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = 100, Visible = false, Parent = col }, { list(14) })
+	screens[name] = f
+	return f
+end
+local function show(name)
+	for n, f in pairs(screens) do f.Visible = (n == name) end
+	shell.CanvasPosition = Vector2.new()
+end
+
+local function call(action, arg)
+	local ok, res = pcall(function() return Api:InvokeServer(action, arg) end)
+	if not ok or type(res) ~= "table" then return { error = "Couldn't reach the server" } end
+	return res
+end
+
+local profile = nil
+
+---------------------------------------------------------------- AGE screen
+local ageScreen = screen("Age")
+local ageCard = card(ageScreen)
+label("How old are you?", 26, BOLD, C.ink, { Parent = ageCard })
+label("Questions are picked to suit your age. You can change this later.", 15, REG, C.muted, { Parent = ageCard })
+local ageGrid = make("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = nextOrder(), Parent = ageCard }, {
+	make("UIGridLayout", { CellSize = UDim2.new(0.5, -6, 0, 96), CellPadding = UDim2.new(0, 12, 0, 12), SortOrder = Enum.SortOrder.LayoutOrder }),
+})
+local ageError = label("", 14, MED, C.danger, { Parent = ageCard })
+local goHome -- forward declaration
+
+for i, key in ipairs(Q.ORDER) do
+	local a = Q.AGES[key]
+	local b = make("TextButton", { Text = "", BackgroundColor3 = C.deep, LayoutOrder = i, AutoButtonColor = true, Parent = ageGrid }, { corner(14), stroke(), pad(10), list(2, Enum.HorizontalAlignment.Left) })
+	label(a.emoji, 26, BOLD, C.ink, { Parent = b })
+	label(a.name, 17, BOLD, C.ink, { Parent = b })
+	label(a.range, 13, REG, C.muted, { Parent = b })
+	b.Activated:Connect(function()
+		local res = call("setAge", key)
+		if res.error then ageError.Text = res.error return end
+		profile = res.profile
+		goHome()
+	end)
+end
+
+---------------------------------------------------------------- HOME screen
+local home = screen("Home")
+local heroCard = card(home)
+local ageBadge = label("", 13, MED, C.muted, { Parent = heroCard })
+local hello = label("", 28, BOLD, C.ink, { Parent = heroCard })
+local sub = label("", 15, REG, C.muted, { Parent = heroCard })
+local playBtn = button("Play today's round", true, { Parent = heroCard })
+local practiceBtn = button("Practice round", false, { Parent = heroCard })
+local changeAgeBtn = button("Change age group", false, { Parent = heroCard, Size = UDim2.new(1, 0, 0, 40), TextSize = 15 })
+local homeError = label("", 14, MED, C.danger, { Parent = heroCard })
+
+local statsRow = make("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 70), LayoutOrder = nextOrder(), Parent = heroCard }, {
+	make("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 10), SortOrder = Enum.SortOrder.LayoutOrder }),
+})
+local statVals = {}
+for i, name in ipairs({ "Streak", "Best", "Days played" }) do
+	local f = make("Frame", { BackgroundColor3 = C.deep, Size = UDim2.new(1 / 3, -7, 1, 0), LayoutOrder = i, Parent = statsRow }, { corner(12) })
+	statVals[name] = make("TextLabel", { BackgroundTransparency = 1, Font = BOLD, TextSize = 24, TextColor3 = C.ink, Text = "0", Size = UDim2.new(1, 0, 0.6, 0), Parent = f })
+	make("TextLabel", { BackgroundTransparency = 1, Font = MED, TextSize = 11, TextColor3 = C.muted, Text = string.upper(name), Position = UDim2.new(0, 0, 0.58, 0), Size = UDim2.new(1, 0, 0.35, 0), Parent = f })
+end
+local resetBtn = button("Reset my daily round (test)", false, { Parent = heroCard, Size = UDim2.new(1, 0, 0, 38), TextSize = 14, TextColor3 = C.accent2, Visible = false })
+
+local lbCard = card(home)
+label("Today's leaderboard", 20, BOLD, C.ink, { Parent = lbCard })
+local tabs = make("Frame", { BackgroundColor3 = C.deep, Size = UDim2.new(1, 0, 0, 40), LayoutOrder = nextOrder(), Parent = lbCard }, {
+	corner(12), pad(4), make("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder }),
+})
+local tabMine = make("TextButton", { Text = "My age", Font = BOLD, TextSize = 14, Size = UDim2.new(0.5, -2, 1, 0), BackgroundColor3 = C.card, TextColor3 = C.ink, LayoutOrder = 1, Parent = tabs }, { corner(9) })
+local tabAll = make("TextButton", { Text = "Everyone", Font = BOLD, TextSize = 14, Size = UDim2.new(0.5, -2, 1, 0), BackgroundColor3 = C.deep, TextColor3 = C.muted, LayoutOrder = 2, Parent = tabs }, { corner(9) })
+local lbSub = label("", 13, REG, C.muted, { Parent = lbCard })
+local lbList = make("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = nextOrder(), Parent = lbCard }, { list(0) })
+
+local scoreCard = card(home)
+label("How scoring works", 18, BOLD, C.ink, { Parent = scoreCard })
+label(string.format('<font color="%s">■ Common +10</font>   <font color="%s">■ Uncommon +25</font>   <font color="%s">■ Rare +50</font>', HEX.c, HEX.u, HEX.r), 14, MED, C.ink, { Parent = scoreCard, RichText = true })
+label("Every prompt has lots of right answers — the rarer yours is, the more it scores. Small spelling slips are fine, and if your answer isn't on the list you get one more try. Beat the clock!", 14, REG, C.muted, { Parent = scoreCard })
+
+local lbScope = "mine"
+local lbToken = 0
+
+local function renderBoard(rows)
+	for _, ch in ipairs(lbList:GetChildren()) do
+		if ch:IsA("GuiObject") then ch:Destroy() end
+	end
+	if #rows == 0 then
+		label("No scores yet today — be the first!", 15, REG, C.muted, { Parent = lbList })
+		return
+	end
+	local medals = { "🥇", "🥈", "🥉" }
+	for i, r in ipairs(rows) do
+		local me = r.userId == player.UserId
+		local row = make("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 40), LayoutOrder = i, Parent = lbList })
+		make("TextLabel", {
+			BackgroundTransparency = 1, Font = me and BOLD or MED, TextSize = 16, TextColor3 = me and C.accent2 or C.ink,
+			Text = (medals[i] or (i .. ".")) .. "  " .. r.name, TextXAlignment = Enum.TextXAlignment.Left,
+			Size = UDim2.new(0.75, 0, 1, 0), TextTruncate = Enum.TextTruncate.AtEnd, Parent = row,
+		})
+		make("TextLabel", {
+			BackgroundTransparency = 1, Font = BOLD, TextSize = 17, TextColor3 = me and C.accent2 or C.ink, Text = tostring(r.score),
+			TextXAlignment = Enum.TextXAlignment.Right, AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, 0, 0, 0), Size = UDim2.new(0.25, 0, 1, 0), Parent = row,
+		})
+		if i < #rows then
+			make("Frame", { BackgroundColor3 = C.line, BorderSizePixel = 0, Size = UDim2.new(1, 0, 0, 1), Position = UDim2.new(0, 0, 1, -1), Parent = row })
+		end
+	end
+end
+
+local function loadBoard()
+	lbToken += 1
+	local token = lbToken
+	local scopeName = (lbScope == "all") and "All age groups" or (profile and profile.age and Q.AGES[profile.age].name or "")
+	lbSub.Text = scopeName .. " · Round #" .. (profile and profile.dayNum or "")
+	local res = call("leaderboard", lbScope)
+	if token ~= lbToken then return end
+	if res.rows then renderBoard(res.rows) end
+end
+
+local function setTab(scope)
+	lbScope = scope
+	tabMine.BackgroundColor3 = scope == "mine" and C.card or C.deep
+	tabMine.TextColor3 = scope == "mine" and C.ink or C.muted
+	tabAll.BackgroundColor3 = scope == "all" and C.card or C.deep
+	tabAll.TextColor3 = scope == "all" and C.ink or C.muted
+	task.spawn(loadBoard)
+end
+tabMine.Activated:Connect(function() setTab("mine") end)
+tabAll.Activated:Connect(function() setTab("all") end)
+
+-- refresh the board every 20 s while home is open
+task.spawn(function()
+	while true do
+		task.wait(20)
+		if screens.Home.Visible and profile then loadBoard() end
+	end
+end)
+
+function goHome()
+	homeError.Text = ""
+	if not profile.age then show("Age") return end
+	local a = Q.AGES[profile.age]
+	ageBadge.Text = a.emoji .. "  " .. a.name .. " · " .. a.range
+	local done = profile.doneToday
+	hello.Text = done and ("Nice one, " .. player.DisplayName .. "!") or ("Ready, " .. player.DisplayName .. "?")
+	sub.Text = done and ("You scored " .. tostring(profile.todayScore) .. " on Round #" .. profile.dayNum .. ". A new round drops at 02:00 SA time.")
+		or ("Round #" .. profile.dayNum .. " — 7 prompts against the clock. Go rare or go home.")
+	playBtn.Text = done and "Today's round done ✓" or "Play today's round"
+	playBtn.Active = not done
+	playBtn.AutoButtonColor = not done
+	playBtn.BackgroundColor3 = done and C.line or C.accent
+	statVals["Streak"].Text = tostring(profile.streak or 0)
+	statVals["Best"].Text = tostring(profile.best or 0)
+	statVals["Days played"].Text = tostring(profile.days or 0)
+	resetBtn.Visible = profile.canReset == true
+	show("Home")
+	task.spawn(loadBoard)
+end
+
+---------------------------------------------------------------- GAME screen
+local game_ = screen("Game")
+local progress = make("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 8), LayoutOrder = nextOrder(), Parent = game_ }, {
+	make("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }),
+})
+local pips = {}
+for i = 1, 7 do
+	pips[i] = make("Frame", { BackgroundColor3 = C.line, Size = UDim2.new(1 / 7, -6, 1, 0), LayoutOrder = i, Parent = progress }, { corner(6) })
+end
+
+local gCard = card(game_)
+local topRow = make("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 20), LayoutOrder = nextOrder(), Parent = gCard })
+local gLabel = make("TextLabel", { BackgroundTransparency = 1, Font = MED, TextSize = 13, TextColor3 = C.muted, Text = "", Size = UDim2.new(0.75, 0, 1, 0), TextXAlignment = Enum.TextXAlignment.Left, Parent = topRow })
+local gTime = make("TextLabel", { BackgroundTransparency = 1, Font = BOLD, TextSize = 15, TextColor3 = C.ink, Text = "", AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, 0, 0, 0), Size = UDim2.new(0.25, 0, 1, 0), TextXAlignment = Enum.TextXAlignment.Right, Parent = topRow })
+local barBack = make("Frame", { BackgroundColor3 = C.line, Size = UDim2.new(1, 0, 0, 8), LayoutOrder = nextOrder(), Parent = gCard }, { corner(6) })
+local barFill = make("Frame", { BackgroundColor3 = C.accent, Size = UDim2.fromScale(1, 1), Parent = barBack }, { corner(6) })
+local gPrompt = label("", 28, BOLD, C.ink, { Parent = gCard })
+
+local answerArea = make("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = nextOrder(), Parent = gCard }, { list(10) })
+local input = make("TextBox", {
+	PlaceholderText = "Type your answer…", Text = "", ClearTextOnFocus = false, Font = MED, TextSize = 18,
+	TextColor3 = C.ink, PlaceholderColor3 = C.muted, BackgroundColor3 = C.deep, Size = UDim2.new(1, 0, 0, 52),
+	TextXAlignment = Enum.TextXAlignment.Left, LayoutOrder = nextOrder(), Parent = answerArea,
+}, { corner(12), stroke(), make("UIPadding", { PaddingLeft = UDim.new(0, 14), PaddingRight = UDim.new(0, 14) }) })
+local hint = label("", 14, MED, C.accent2, { Parent = answerArea })
+local btnRow = make("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 50), LayoutOrder = nextOrder(), Parent = answerArea }, {
+	make("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 10), SortOrder = Enum.SortOrder.LayoutOrder }),
+})
+local skipBtn = button("Skip", false, { Parent = btnRow, Size = UDim2.new(1 / 3, -5, 1, 0), LayoutOrder = 1 })
+local goBtn = button("Lock it in", true, { Parent = btnRow, Size = UDim2.new(2 / 3, -5, 1, 0), LayoutOrder = 2 })
+
+local resultArea = make("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = nextOrder(), Visible = false, Parent = gCard }, { list(10) })
+local tierBox = make("Frame", { BackgroundColor3 = C.deep, Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y, LayoutOrder = nextOrder(), Parent = resultArea }, { corner(14), pad(14), list(4) })
+local tierSmall = label("", 15, MED, C.ink, { Parent = tierBox, TextXAlignment = Enum.TextXAlignment.Center })
+local tierBig = label("", 24, BOLD, C.ink, { Parent = tierBox, TextXAlignment = Enum.TextXAlignment.Center })
+local revealText = label("", 14, REG, C.ink, { Parent = resultArea, RichText = true })
+local nextBtn = button("Next", true, { Parent = resultArea })
+
+local round = nil
+local timerToken = 0
+local busy = false
+
+local function esc(s)
+	return (string.gsub(s or "", "[<>&\"']", { ["<"] = "&lt;", [">"] = "&gt;", ["&"] = "&amp;", ['"'] = "&quot;", ["'"] = "&apos;" }))
+end
+
+local submit -- forward
+
+local function startTimer(seconds)
+	timerToken += 1
+	local token = timerToken
+	local deadline = os.clock() + seconds
+	barFill.Size = UDim2.fromScale(1, 1)
+	barFill.BackgroundColor3 = C.accent
+	task.spawn(function()
+		while token == timerToken do
+			local left = math.max(0, deadline - os.clock())
+			gTime.Text = "⏱ " .. math.ceil(left) .. "s"
+			barFill.Size = UDim2.fromScale(left / seconds, 1)
+			barFill.BackgroundColor3 = left <= 5 and C.danger or C.accent
+			if left <= 0 and not busy then
+				submit(true)
+				return
+			end
+			task.wait(0.1)
+		end
+	end)
+end
+local function stopTimer() timerToken += 1 end
+
+local function showQuestion(q)
+	round.index = q.index
+	for i = 1, 7 do
+		pips[i].BackgroundColor3 = (i < q.index) and C.accent or (i == q.index and C.accent2 or C.line)
+	end
+	gLabel.Text = (q.daily and ("Round #" .. q.dayNum) or "Practice") .. " · " .. q.index .. " of " .. q.total .. " · " .. q.score .. " pts"
+	gPrompt.Text = q.q .. "…"
+	input.Text = ""
+	hint.Text = ""
+	answerArea.Visible = true
+	resultArea.Visible = false
+	busy = false
+	startTimer(q.time)
+	task.defer(function() input:CaptureFocus() end)
+end
+
+local function showResult(res)
+	stopTimer()
+	answerArea.Visible = false
+	resultArea.Visible = true
+	local t = res.tier
+	tierBox.BackgroundColor3 = C.deep
+	tierBig.TextColor3 = C[t]
+	tierSmall.Text = res.show or (res.timeout and "Out of time ⏰" or "Not on the list")
+	tierBig.Text = (t == "x") and "No points" or (TIERNAME[t] .. " +" .. res.points)
+	local rv = res.reveal
+	local more = (rv.more > 0) and ('  <font color="#9db0c4">+' .. rv.more .. " more</font>") or ""
+	revealText.Text = string.format(
+		'<b><font color="%s">COMMON</font></b>  %s\n<b><font color="%s">UNCOMMON</font></b>  %s\n<b><font color="%s">RARE</font></b>  %s%s',
+		HEX.c, esc(table.concat(rv.c, ", ")), HEX.u, esc(table.concat(rv.u, ", ")), HEX.r, esc(table.concat(rv.r, ", ")), more)
+	gLabel.Text = string.gsub(gLabel.Text, "%d+ pts$", res.score .. " pts")
+	nextBtn.Text = res.last and "See my score" or "Next"
+	round.last = res.last
+end
+
+function submit(timeout, skip)
+	if busy or not round then return end
+	local text = input.Text
+	if not timeout and not skip and string.gsub(text, "%s", "") == "" then return end
+	busy = true
+	if timeout or skip then stopTimer() end
+	local res = call("answer", { text = text, timeout = timeout == true, skip = skip == true })
+	if res.error then
+		hint.Text = res.error
+		busy = false
+		return
+	end
+	if res.retry then
+		hint.Text = "Hmm, that's not on our list — one more try!"
+		input.Text = ""
+		busy = false
+		task.defer(function() input:CaptureFocus() end)
+		return
+	end
+	showResult(res)
+end
+
+goBtn.Activated:Connect(function() submit(false) end)
+skipBtn.Activated:Connect(function() submit(false, true) end)
+input.FocusLost:Connect(function(enter)
+	if enter and answerArea.Visible then submit(false) end
+end)
+
+---------------------------------------------------------------- END screen
+local endScreen = screen("End")
+local eCard = card(endScreen)
+local eLabel = label("", 13, MED, C.muted, { Parent = eCard, TextXAlignment = Enum.TextXAlignment.Center })
+local eScore = label("0", 64, BOLD, C.accent, { Parent = eCard, TextXAlignment = Enum.TextXAlignment.Center })
+label("out of 350", 13, REG, C.muted, { Parent = eCard, TextXAlignment = Enum.TextXAlignment.Center })
+local squares = make("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 36), LayoutOrder = nextOrder(), Parent = eCard }, {
+	make("UIListLayout", { FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 8), HorizontalAlignment = Enum.HorizontalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder }),
+})
+local sq = {}
+for i = 1, 7 do sq[i] = make("Frame", { BackgroundColor3 = C.x, Size = UDim2.fromOffset(32, 32), LayoutOrder = i, Parent = squares }, { corner(7) }) end
+local eMsg = label("", 15, REG, C.muted, { Parent = eCard, TextXAlignment = Enum.TextXAlignment.Center })
+local eHome = button("Back home", true, { Parent = eCard })
+local eListCard = card(endScreen)
+label("Your answers", 18, BOLD, C.ink, { Parent = eListCard })
+local eList = label("", 14, REG, C.ink, { Parent = eListCard, RichText = true })
+
+local function finishRound()
+	local res = call("finish")
+	if res.error then
+		hint.Text = res.error
+		return
+	end
+	profile = res.profile or profile
+	eLabel.Text = res.daily and ("Round #" .. profile.dayNum .. " · " .. Q.AGES[profile.age].name) or "Practice round"
+	eScore.Text = tostring(res.score)
+	local rares = 0
+	for i, t in ipairs(res.tiers) do
+		sq[i].BackgroundColor3 = C[t]
+		if t == "r" then rares += 1 end
+	end
+	local msg
+	if res.score >= 250 then msg = "Legendary. Your brain lives off the beaten track."
+	elseif rares >= 2 then msg = rares .. " rare answers — proper deep cuts!"
+	elseif res.score >= 120 then msg = "Solid round! Try going rarer tomorrow."
+	else msg = "Every round makes you sharper. Go again tomorrow!" end
+	if res.daily then msg ..= res.saved and "  Score saved ✓" or "  (You'd already played today, so this didn't count.)" end
+	eMsg.Text = msg
+	local lines = {}
+	for _, r in ipairs(res.results) do
+		local colr = HEX[r.tier] or "#9db0c4"
+		local ans = r.show and esc(r.show) or '<font color="#9db0c4">no points</font>'
+		table.insert(lines, string.format('<font color="%s">■</font> <b>%s</b> — %s', colr, esc(r.q), ans))
+	end
+	eList.Text = table.concat(lines, "\n")
+	round = nil
+	show("End")
+end
+
+nextBtn.Activated:Connect(function()
+	if not round or busy then return end
+	busy = true
+	if round.last then
+		finishRound()
+		busy = false
+		return
+	end
+	local res = call("next")
+	if res.error then hint.Text = res.error busy = false return end
+	showQuestion(res.question)
+end)
+
+eHome.Activated:Connect(function() goHome() end)
+
+---------------------------------------------------------------- start / buttons
+local function startRound(daily)
+	homeError.Text = ""
+	local res = call("start", daily)
+	if res.error then homeError.Text = res.error return end
+	round = { daily = daily }
+	show("Game")
+	showQuestion(res.question)
+end
+
+playBtn.Activated:Connect(function()
+	if profile and not profile.doneToday then startRound(true) end
+end)
+practiceBtn.Activated:Connect(function() startRound(false) end)
+changeAgeBtn.Activated:Connect(function()
+	ageError.Text = ""
+	show("Age")
+end)
+resetBtn.Activated:Connect(function()
+	local res = call("resetToday")
+	if res.error then homeError.Text = res.error return end
+	profile = res.profile
+	goHome()
+end)
+
+---------------------------------------------------------------- boot
+local loading = label("Loading…", 18, MED, C.muted, { Parent = col, LayoutOrder = 99, TextXAlignment = Enum.TextXAlignment.Center })
+local res
+for attempt = 1, 5 do
+	res = call("profile")
+	if res.profile then break end
+	task.wait(2)
+end
+loading:Destroy()
+if res and res.profile then
+	profile = res.profile
+	whoLabel.Text = player.DisplayName
+	goHome()
+else
+	label("Couldn't load your profile. Please rejoin.", 16, MED, C.danger, { Parent = col, TextXAlignment = Enum.TextXAlignment.Center })
+end
+]]></ProtectedString></Properties></Item>
+</Item></Item>
+</roblox>
