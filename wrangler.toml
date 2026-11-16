@@ -1,4 +1,4 @@
-name = "quizillion"
+name = "quiz"
 main = "src/worker.js"
 compatibility_date = "2026-11-01"
 
@@ -8,5 +8,5 @@ binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "quizillion"
+database_name = "quiz"
 database_id = "3b9f0049-acbe-4ce2-a294-62eebf9f4caf"

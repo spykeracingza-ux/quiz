@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quizillion — the rare-answer quiz</title>
+<title>Brainwave — the rare-answer quiz</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0d1b2a; --bg2:#13263a; --card:#172e46; --line:#25425f;
-  --ink:#eef3f8; --muted:#9db0c4; --krill:#ff7a8a; --krill2:#ffb4a2;
+  --ink:#eef3f8; --muted:#9db0c4; --accent:#ff7a8a; --accent2:#ffb4a2;
   --common:#3ecf8e; --uncommon:#4aa8ff; --rare:#c084fc; --miss:#5b6b7c;
   --radius:18px;
 }
@@ -20,7 +20,7 @@ h1,h2,h3,.display{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.
 header.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
 .logo{display:flex;align-items:center;gap:10px;font-family:"Bricolage Grotesque";font-weight:800;font-size:24px}
 .logo svg{width:34px;height:34px}
-.logo span b{color:var(--krill)}
+.logo span b{color:var(--accent)}
 .chip{font-size:12px;padding:6px 10px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--muted);cursor:pointer}
 .chip:hover{color:var(--ink)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:16px}
@@ -28,9 +28,9 @@ header.top{display:flex;align-items:center;justify-content:space-between;margin-
 .small{font-size:13px}
 label{display:block;font-size:13px;color:var(--muted);margin:14px 0 6px}
 input[type=text],input[type=password]{width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:500 16px Inter;outline:none;transition:border .15s}
-input:focus{border-color:var(--krill)}
+input:focus{border-color:var(--accent)}
 button{font-family:inherit;cursor:pointer;border:0}
-.btn{display:block;width:100%;padding:15px;border-radius:14px;background:var(--krill);color:#2a0b12;font:700 17px "Bricolage Grotesque";margin-top:18px;transition:transform .08s,filter .15s}
+.btn{display:block;width:100%;padding:15px;border-radius:14px;background:var(--accent);color:#2a0b12;font:700 17px "Bricolage Grotesque";margin-top:18px;transition:transform .08s,filter .15s}
 .btn:hover{filter:brightness(1.06)}.btn:active{transform:scale(.98)}
 .btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
 .btn:disabled{opacity:.45;cursor:not-allowed}
@@ -40,7 +40,7 @@ button{font-family:inherit;cursor:pointer;border:0}
 .ages{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .age{background:var(--bg);border:1.5px solid var(--line);border-radius:14px;padding:14px;text-align:left;color:var(--ink)}
 .age .e{font-size:26px}.age .n{font-weight:700;font-family:"Bricolage Grotesque";font-size:16px;margin-top:4px}.age .r{font-size:12px;color:var(--muted)}
-.age.on{border-color:var(--krill);background:#2a2335}
+.age.on{border-color:var(--accent);background:#2a2335}
 .err{color:#ff9aa5;font-size:13px;margin-top:10px;min-height:16px}
 .hero h2{font-size:30px;line-height:1.1}
 .badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line)}
@@ -49,10 +49,10 @@ button{font-family:inherit;cursor:pointer;border:0}
 .stat b{display:block;font:800 22px "Bricolage Grotesque"}
 .stat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .lb li{list-style:none;display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
-.lb li:last-child{border:0}.lb li.me{color:var(--krill2);font-weight:600}
+.lb li:last-child{border:0}.lb li.me{color:var(--accent2);font-weight:600}
 .progress{display:flex;gap:6px;margin-bottom:18px}
 .progress i{flex:1;height:6px;border-radius:9px;background:var(--line)}
-.progress i.done{background:var(--krill)}.progress i.cur{background:var(--krill2)}
+.progress i.done{background:var(--accent)}.progress i.cur{background:var(--accent2)}
 .prompt{font:700 27px/1.15 "Bricolage Grotesque";margin:6px 0 4px}
 .tierbox{border-radius:14px;padding:16px;margin-top:16px;text-align:center}
 .tierbox .t{font:800 22px "Bricolage Grotesque"}
@@ -64,13 +64,13 @@ button{font-family:inherit;cursor:pointer;border:0}
 .reveal div{margin-top:6px}
 .reveal b{font-size:11px;text-transform:uppercase;letter-spacing:.07em;margin-right:6px}
 .grid{font-size:30px;letter-spacing:4px;text-align:center;margin:12px 0}
-.score{font:800 64px "Bricolage Grotesque";text-align:center;color:var(--krill)}
+.score{font:800 64px "Bricolage Grotesque";text-align:center;color:var(--accent)}
 .legend{display:flex;justify-content:center;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
 .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;background:var(--c)}
 .note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
 .hidden{display:none!important}
 .row{display:flex;gap:10px}.row .btn{margin-top:12px}
-.hint{font-size:13px;color:var(--krill2);margin-top:10px;min-height:18px}
+.hint{font-size:13px;color:var(--accent2);margin-top:10px;min-height:18px}
 @keyframes pop{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
 .pop{animation:pop .25s ease-out}
 </style>
@@ -79,8 +79,8 @@ button{font-family:inherit;cursor:pointer;border:0}
 <div class="wrap">
   <header class="top">
     <div class="logo">
-      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#172e46" stroke="#25425f"/><path d="M9 23c4-9 15-12 22-6-3 1-5 3-6 6-5 2-11 2-16 0z" fill="#ff7a8a"/><circle cx="27" cy="18" r="1.6" fill="#0d1b2a"/><path d="M12 25l-3 4M16 26l-2 4M20 26l-1 4" stroke="#ffb4a2" stroke-width="1.6" stroke-linecap="round"/></svg>
-      <span>Quiz<b>illion</b></span>
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#172e46" stroke="#25425f"/><path d="M20 10c-3-2-8 0-8 4-3 1-3 6 0 7-1 4 3 7 7 6 0.5 0 1-.4 1-1V11c0-.4-.3-.8 0-1z" fill="#ff7a8a"/><path d="M20 10c3-2 8 0 8 4 3 1 3 6 0 7 1 4-3 7-7 6-.5 0-1-.4-1-1V11c0-.4.3-.8 0-1z" fill="#ffb4a2"/><path d="M6 31c3-3 5 3 8 0s5 3 8 0 5 3 8 0 5 3 4 1" stroke="#ff7a8a" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      <span>Brain<b>wave</b></span>
     </div>
     <div id="topRight"></div>
   </header>
@@ -405,7 +405,7 @@ async function endGame(){
   const rares=G.res.filter(r=>r.t==="r").length;
   $("eMsg").textContent=G.score>=250?"Legendary. Your brain lives off the beaten track.":rares>=2?`${rares} rare answers — proper deep cuts!`:G.score>=120?"Solid round! Try going rarer tomorrow.":"Every round makes you sharper. Go again tomorrow!";
   $("eList").innerHTML=G.res.map(r=>`<div>${SQ[r.t]} <b style="text-transform:none;letter-spacing:0;font-size:14px">${esc(r.q)}</b> — ${r.show?esc(r.show):r.typed?`<span class="muted">${esc(r.typed)}</span>`:`<span class="muted">skipped</span>`} <span class="muted">+${PTS[r.t]}</span></div>`).join("");
-  G.share=`Quizillion #${dayNum()} (${AGES[me.age].name})${G.daily?"":" practice"}\n${grid} ${G.score}/350`;
+  G.share=`Brainwave #${dayNum()} (${AGES[me.age].name})${G.daily?"":" practice"}\n${grid} ${G.score}/350`;
   show("vEnd");
   if(G.daily){
     try{me=(await api("/api/score",{score:G.score,grid,day:today()})).player}catch(e){}

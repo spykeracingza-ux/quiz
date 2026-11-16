@@ -1,4 +1,4 @@
-// Quizillion API — Cloudflare Worker + D1. Static files are served from ./public.
+// Brainwave API — Cloudflare Worker + D1. Static files are served from ./public.
 const AGES = ["kids", "juniors", "teens", "adults"];
 const MAX_SCORE = 350;
 

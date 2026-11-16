@@ -1,4 +1,4 @@
-# Quizillion — deploy to Cloudflare
+# Brainwave — deploy to Cloudflare
 
 Needs Node.js and a Cloudflare account. Run these from this folder.
 
@@ -10,9 +10,9 @@ npx wrangler d1 execute quizillion --remote --file=schema.sql
 npx wrangler deploy
 ```
 
-The site goes live at `https://quizillion.<your-subdomain>.workers.dev`.
+The site goes live at `https://quiz.<your-subdomain>.workers.dev`.
 
-**Custom domain:** in the Cloudflare dashboard, open Workers & Pages → quizillion → Settings → Domains & Routes → Add → Custom domain.
+**Custom domain:** in the Cloudflare dashboard, open Workers & Pages → quiz → Settings → Domains & Routes → Add → Custom domain.
 
 **Run locally first (optional):**
 ```bash
