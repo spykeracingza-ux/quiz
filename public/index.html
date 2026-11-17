@@ -387,22 +387,26 @@ function seeded(seed){let h=1779033703^seed.length;for(const c of seed){h=Math.i
 // day, so every player sees the same round and new prompts join at the next refill.
 const EPOCH_DAY=2; // dayNum() of 2026-11-17
 function bagDays(list,key,upto,n){
+  // A prompt may carry d:<dayNum> = first day it may appear. Past days are replayed
+  // using only prompts that existed then, so adding prompts never changes any day
+  // that has already been played (and never causes a repeat).
   const rnd=seeded("bag:"+key);
   const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-  let bag=shuf(list), out=[];
+  const start=p=>Math.max(p.d||EPOCH_DAY,EPOCH_DAY);
+  let bag=shuf(list.filter(p=>start(p)<=EPOCH_DAY)), out=[];
   for(let d=EPOCH_DAY; d<=upto; d++){
-    const today=[];
-    while(today.length<Math.min(n,list.length)){
+    const elig=list.filter(p=>start(p)<=d);
+    if(d>EPOCH_DAY){const fresh=elig.filter(p=>start(p)===d); if(fresh.length) bag=shuf(fresh).concat(bag);}
+    const todayArr=[];
+    while(todayArr.length<Math.min(n,elig.length)){
       if(!bag.length){
-        // refill: everything except what is already in today's round, and
-        // put anything newly added to the bank first
-        const recent=list.filter(p=>today.includes(p)||out.includes(p));
-        bag=shuf(list.filter(p=>!recent.includes(p))).concat(shuf(list.filter(p=>out.includes(p)&&!today.includes(p))));
+        const recent=elig.filter(p=>todayArr.includes(p)||out.includes(p));
+        bag=shuf(elig.filter(p=>!recent.includes(p))).concat(shuf(elig.filter(p=>out.includes(p)&&!todayArr.includes(p))));
         if(!bag.length) break;
       }
-      today.push(bag.shift());
+      todayArr.push(bag.shift());
     }
-    out=today;
+    out=todayArr;
   }
   return out;
 }
