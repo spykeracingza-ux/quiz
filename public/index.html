@@ -292,6 +292,38 @@ adults:[
  {q:"Name a South African provincial capital",c:"Johannesburg|Cape Town|Bloemfontein",u:"Pietermaritzburg|Polokwane|Kimberley",r:"Bhisho/bisho|Mbombela/nelspruit|Mahikeng/mafikeng"}
 ]};
 for (const g in SA_BANK) SA_BANK[g].forEach(p=>{p.sa=1;BANK[g].push(p)});
+
+/* Extra prompts (Nov 2026). sa:1 marks South Africa prompts. */
+const EXTRA_BANK = {
+kids:[
+ {q:"Name a pet animal",c:"Dog/puppy|Cat/kitten|Fish/goldfish|Hamster",u:"Rabbit/bunny|Budgie/parrot|Guinea pig|Tortoise/turtle|Mouse",r:"Ferret|Lizard/gecko|Snake|Chinchilla|Hedgehog|Rat|Canary|Gerbil|Axolotl|Bearded dragon|Stick insect|Hermit crab|Frog|Pony|Horse|Chicken|Cockatiel|Lovebird|Iguana|Tarantula/spider"},
+ {q:"Name an insect",c:"Ant|Bee|Butterfly|Fly|Ladybird/ladybug",u:"Mosquito|Grasshopper|Beetle|Dragonfly|Cockroach|Wasp|Moth",r:"Cricket|Termite|Praying mantis/mantis|Stick insect|Firefly|Flea|Earwig|Aphid|Cicada|Locust|Dung beetle|Louse/lice|Silverfish|Bumblebee|Hornet|Weevil|Caterpillar"},
+ {q:"Name a vehicle",c:"Car|Bus|Truck|Bicycle/bike|Train|Aeroplane/plane/airplane",u:"Motorbike/motorcycle|Boat|Taxi|Ship|Helicopter|Tractor|Scooter|Ambulance|Fire engine/fire truck",r:"Tram|Van|Bakkie|Submarine|Rocket|Jet ski|Skateboard|Police car|Digger/excavator|Bulldozer|Forklift|Golf cart|Quad bike|Caravan|Yacht|Canoe|Kayak|Ferry|Hot air balloon|Limousine|Minibus taxi|Garbage truck/rubbish truck|Cement mixer|Crane|Tuk tuk|Unicycle|Tricycle|Sled/sledge"},
+ {q:"Name a day of the week",c:"Monday|Friday|Saturday|Sunday",u:"Tuesday|Thursday",r:"Wednesday"},
+ {sa:1,q:"Name something you'd eat at a braai",c:"Boerewors/wors|Chops/lamb chops|Steak|Chicken|Sausage",u:"Pap|Salad|Potato salad|Braaibroodjies/braai broodjies|Garlic bread|Mielies/corn|Rolls",r:"Sosaties|Ribs|Chakalaka|Roosterkoek|Butternut|Snoek|Skilpadjies|Kebabs|Burgers|Coleslaw|Beetroot salad|Tomato and onion relish/sous|Chutney|Fish|Prawns|Sweet potato|Mushrooms|Halloumi"}
+],
+juniors:[
+ {q:"Name a country in South America",c:"Brazil|Argentina|Chile|Colombia",u:"Peru|Venezuela|Uruguay|Ecuador|Bolivia|Paraguay",r:"Guyana|Suriname"},
+ {q:"Name a dinosaur",c:"Tyrannosaurus rex/t rex/trex/tyrannosaurus|Triceratops|Velociraptor/raptor|Stegosaurus",u:"Brachiosaurus|Diplodocus|Pterodactyl/pteranodon|Spinosaurus|Ankylosaurus|Brontosaurus|Apatosaurus",r:"Allosaurus|Iguanodon|Parasaurolophus|Pachycephalosaurus|Carnotaurus|Giganotosaurus|Argentinosaurus|Dilophosaurus|Compsognathus|Gallimimus|Therizinosaurus|Archaeopteryx|Megalosaurus|Deinonychus|Oviraptor|Troodon|Baryonyx|Styracosaurus|Protoceratops|Edmontosaurus|Massospondylus|Heterodontosaurus|Mosasaurus|Plesiosaurus"},
+ {q:"Name a part of a plant",c:"Leaf|Root|Stem|Flower",u:"Seed|Petal|Fruit|Branch|Trunk",r:"Pollen|Stamen|Pistil|Bark|Sepal|Thorn|Bud|Stigma|Anther|Ovary|Xylem|Phloem|Node|Tuber|Bulb|Shoot|Cone"},
+ {sa:1,q:"Name a sea creature found off South Africa",c:"Shark/great white shark|Whale/southern right whale/humpback whale|Dolphin|Penguin/african penguin",u:"Seal/cape fur seal|Octopus|Sardine|Snoek|Turtle",r:"Crayfish/rock lobster|Abalone/perlemoen|Galjoen|Kob/kabeljou|Yellowtail|Hake|Ragged-tooth shark/raggie|Bronze whaler|Orca/killer whale|Manta ray|Stingray|Jellyfish|Starfish|Sea urchin|Mussel|Oyster|Bluebottle|Whale shark|Hammerhead|Seahorse/knysna seahorse"},
+ {sa:1,q:"Name a famous South African landmark",c:"Table Mountain|Robben Island|Union Buildings",u:"Kruger National Park/kruger|Cape Point/cape of good hope|God's Window|Blyde River Canyon|Voortrekker Monument|Big Hole/kimberley big hole",r:"Bourke's Luck Potholes|Three Rondavels|Sun City|Lion's Head|Constitution Hill|Apartheid Museum|Moses Mabhida Stadium|FNB Stadium/soccer city|Nelson Mandela Bridge|Hector Pieterson Memorial|Castle of Good Hope|V&A Waterfront/waterfront|Chapman's Peak|Boulders Beach|Cango Caves|Augrabies Falls|Golden Gate|Howick Falls|Tugela Falls|Sterkfontein Caves|Bloukrans Bridge|Kirstenbosch|Hartbeespoort Dam|Gold Reef City|Vilakazi Street|Golden Mile|uShaka Marine World/ushaka|Valley of Desolation"}
+],
+teens:[
+ {q:"Name a social media or messaging app",c:"Instagram|TikTok|WhatsApp|Facebook|YouTube|Snapchat",u:"X/twitter|Pinterest|Reddit|Discord|Threads|LinkedIn|Telegram",r:"BeReal|Tumblr|Twitch|Bluesky|Mastodon|WeChat|Weibo|Line|Signal|Clubhouse|Vine|MySpace|Quora|Viber|Kik"},
+ {q:"Name a polygon (a flat shape with straight sides)",c:"Triangle|Square|Rectangle|Pentagon|Hexagon",u:"Octagon|Rhombus|Trapezium/trapezoid|Parallelogram|Heptagon|Kite",r:"Nonagon/enneagon|Decagon|Hendecagon/undecagon|Dodecagon|Quadrilateral|Scalene triangle|Equilateral triangle|Isosceles triangle|Icosagon"},
+ {q:"Name a country in Asia",c:"China|Japan|India|South Korea/korea",u:"Thailand|Vietnam|Indonesia|Philippines|Pakistan|Malaysia|Singapore|Saudi Arabia|Iran|Turkey",r:"Bangladesh|Nepal|Bhutan|Sri Lanka|Maldives|Myanmar/burma|Laos|Cambodia|Mongolia|North Korea|Brunei|Timor-Leste/east timor|Kazakhstan|Uzbekistan|Kyrgyzstan|Tajikistan|Turkmenistan|Afghanistan|Iraq|Syria|Lebanon|Jordan|Yemen|Oman|United Arab Emirates/uae|Qatar|Bahrain|Kuwait|Georgia|Armenia|Azerbaijan|Russia"},
+ {sa:1,q:"Name a Springbok rugby player (past or present)",c:"Siya Kolisi/kolisi|Eben Etzebeth/etzebeth|Cheslin Kolbe/kolbe",u:"Faf de Klerk|Pieter-Steph du Toit|Handré Pollard/handre pollard/pollard|Makazole Mapimpi/mapimpi|Damian de Allende/de allende|Bongi Mbonambi/mbonambi|Malcolm Marx/marx|Kurt-Lee Arendse/arendse|Lukhanyo Am|Frans Malherbe|Steven Kitshoff/kitshoff|Duane Vermeulen/vermeulen|Manie Libbok/libbok|Willie le Roux/le roux|Canan Moodie|Jesse Kriel/kriel|RG Snyman/snyman|Franco Mostert/mostert|Kwagga Smith|Ox Nché/ox nche|Damian Willemse/willemse|Cobus Reinach/reinach|Grant Williams|Jasper Wiese|Lood de Jager|Vincent Koch|Trevor Nyakane|Jaden Hendrikse|Sacha Feinberg-Mngomezulu/sacha|Elton Jantjies|Herschel Jantjies",r:"Bryan Habana/habana|Francois Pienaar|Joost van der Westhuizen/joost|John Smit|Victor Matfield/matfield|Bakkies Botha|Schalk Burger|Jean de Villiers|Os du Randt|Percy Montgomery|Naas Botha|Danie Gerber|Chester Williams|Butch James|Fourie du Preez|Juan Smith|Tendai Mtawarira/the beast/beast|Morné Steyn/morne steyn|Ruan Pienaar|Bismarck du Plessis|Jannie du Plessis|Pat Lambie|JP Pietersen|Joel Stransky/stransky|Mark Andrews|Frik du Preez"},
+ {sa:1,q:"Name a Bafana Bafana player (past or present)",c:"Lucas Radebe/radebe|Benni McCarthy/mccarthy|Percy Tau|Ronwen Williams",u:"Teboho Mokoena|Themba Zwane|Doctor Khumalo|Steven Pienaar|Siphiwe Tshabalala/tshabalala|Itumeleng Khune/khune|Mark Fish|Shaun Bartlett|Aaron Mokoena|Lyle Foster|Thembinkosi Lorch/lorch|Relebohile Mofokeng/rele|Oswin Appollis|Mothobi Mvala|Bongani Zungu|Keagan Dolly|Siyabonga Nomvethe",r:"Phil Masinga|John Moshoeu|Neil Tovey|Quinton Fortune|Delron Buckley|Sibusiso Zuma|Teko Modise|Bernard Parker|Katlego Mphela|Andre Arendse|Hans Vonk|Brian Baloyi|Matthew Booth|Bradley Grobler|Kamohelo Mokotjo|Dean Furman|Thulani Serero|Tokelo Rantie|Mbulelo Mabizela|Pierre Issa|Helman Mkhalele|Jabu Pule/jabu mahlangu|Elrio van Heerden|Tsepo Masilela|Siboniso Gaxa|Reneilwe Letsholonyane|Aubrey Modiba|Khuliso Mudau|Evidence Makgopa|Sipho Mbule|Iqraam Rayners"}
+],
+adults:[
+ {q:"Name a country that starts with M",c:"Mexico|Morocco|Mozambique|Malawi|Madagascar",u:"Malaysia|Mali|Malta|Mauritius|Mongolia|Monaco|Myanmar",r:"Maldives|Mauritania|Moldova|Montenegro|Marshall Islands|Micronesia"},
+ {q:"Name a city that has hosted the Summer Olympics",c:"London|Paris|Tokyo|Beijing|Los Angeles/la",u:"Rio de Janeiro/rio|Sydney|Athens|Atlanta|Barcelona|Seoul|Moscow",r:"Montreal|Munich|Mexico City|Melbourne|Rome|Helsinki|Amsterdam|Antwerp|Stockholm|St. Louis/st louis/saint louis|Berlin"},
+ {q:"Name a Roman emperor",c:"Augustus|Nero|Caligula|Marcus Aurelius",u:"Constantine|Hadrian|Tiberius|Claudius|Trajan|Commodus|Vespasian",r:"Titus|Domitian|Nerva|Antoninus Pius|Septimius Severus|Caracalla|Diocletian|Galba|Otho|Vitellius|Lucius Verus|Elagabalus|Severus Alexander|Aurelian|Theodosius|Justinian|Romulus Augustulus|Maximian|Valerian|Gallienus|Julian|Valentinian|Honorius|Pertinax|Didius Julianus|Geta|Macrinus|Philip the Arab|Decius"},
+ {sa:1,q:"Name a South African newspaper or news site",c:"Sunday Times|Mail & Guardian/mail and guardian|The Star|Daily Sun|News24",u:"City Press|Sowetan|Beeld|Die Burger|Rapport|Cape Times|Business Day|Daily Maverick|The Citizen|Cape Argus|TimesLIVE|IOL",r:"Daily Dispatch|The Witness|The Herald|Volksblad|Isolezwe|Ilanga|Daily News|The Mercury|Financial Mail|Weekend Argus|Diamond Fields Advertiser|Pretoria News|Saturday Star|Sunday World|Sunday Independent|Son|Netwerk24|The South African|Moneyweb|EWN/eyewitness news"},
+ {sa:1,q:"Name a South African cricketer (past or present)",c:"AB de Villiers/ab|Jacques Kallis/kallis|Kagiso Rabada/rabada|Dale Steyn/steyn|Graeme Smith",u:"Hashim Amla/amla|Faf du Plessis|Quinton de Kock/de kock|Shaun Pollock|Allan Donald|Makhaya Ntini/ntini|Temba Bavuma/bavuma|Jonty Rhodes|Herschelle Gibbs/gibbs|Gary Kirsten|Mark Boucher|Hansie Cronje/cronje|Aiden Markram/markram|David Miller|Keshav Maharaj|Lungi Ngidi|Anrich Nortje|Heinrich Klaasen/klaasen|Marco Jansen",r:"Lance Klusener/klusener|Morne Morkel|Albie Morkel|Vernon Philander/philander|Imran Tahir|Paul Adams|Barry Richards|Graeme Pollock|Mike Procter|Eddie Barlow|Clive Rice|Kepler Wessels|Fanie de Villiers|Brian McMillan|Daryll Cullinan|Neil McKenzie|Ashwell Prince|JP Duminy/duminy|Tabraiz Shamsi/shamsi|Rassie van der Dussen|Tristan Stubbs|Dewald Brevis/brevis|Gerald Coetzee|Ryan Rickelton|Wiaan Mulder|Kyle Verreynne|Dean Elgar|Laura Wolvaardt/wolvaardt|Marizanne Kapp|Shabnim Ismail|Dane van Niekerk|Chloe Tryon|Nonkululeko Mlaba|Ayabonga Khaka|Sune Luus|Tazmin Brits"}
+]};
+for (const g in EXTRA_BANK) EXTRA_BANK[g].forEach(p=>BANK[g].push(p));
 const PTS = {c:10,u:25,r:50,x:0};
 const TIERNAME = {c:"Common",u:"Uncommon",r:"Rare",x:"Not accepted"};
 const SQ = {c:"🟩",u:"🟦",r:"🟪",x:"⬜"};
@@ -347,12 +379,28 @@ function dayNum(){return Math.floor((new Date(today())-new Date("2026-11-16"))/8
 function yesterday(){const d=new Date(today());d.setDate(d.getDate()-1);return d.toISOString().slice(0,10)}
 function seeded(seed){let h=1779033703^seed.length;for(const c of seed){h=Math.imul(h^c.charCodeAt(0),3432918353);h=h<<13|h>>>19}
   return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296}}
+// Daily rounds walk through each age group's prompts in a fixed shuffled cycle,
+// so nothing repeats until the whole set has been played. Practice is random.
+function cycleTake(list,key,start,count){
+  const n=list.length, out=[];
+  for(let pos=start; out.length<Math.min(count,n); pos++){
+    const cyc=Math.floor(pos/n), rnd=seeded(key+":"+cyc), perm=list.slice();
+    for(let i=n-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[perm[i],perm[j]]=[perm[j],perm[i]]}
+    const p=perm[pos%n]; if(!out.includes(p)) out.push(p);
+  }
+  return out;
+}
 function pick(group,seed){
-  const rnd=seed?seeded(seed):Math.random;
-  const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-  const sa=shuf(BANK[group].filter(p=>p.sa)), other=shuf(BANK[group].filter(p=>!p.sa));
-  const nSa=Math.min(sa.length,3+Math.floor(rnd()*2)); // 3 or 4 SA prompts
-  return shuf(sa.slice(0,nSa).concat(other.slice(0,ROUND-nSa)));
+  const sa=BANK[group].filter(p=>p.sa), other=BANK[group].filter(p=>!p.sa);
+  const SA_N=3, OTHER_N=ROUND-SA_N;
+  if(!seed){
+    const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+    return shuf(shuf(sa).slice(0,SA_N).concat(shuf(other).slice(0,OTHER_N)));
+  }
+  const day=dayNum(), rnd=seeded(seed);
+  const chosen=cycleTake(sa,"sa:"+group,day*SA_N,SA_N).concat(cycleTake(other,"gen:"+group,day*OTHER_N,OTHER_N));
+  for(let i=chosen.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[chosen[i],chosen[j]]=[chosen[j],chosen[i]]}
+  return chosen;
 }
 function show(v){["vAuth","vHome","vGame","vEnd"].forEach(x=>$(x).classList.toggle("hidden",x!==v));window.scrollTo(0,0)}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}

@@ -129,6 +129,9 @@ export default {
       try { return await handleApi(req, env, url); }
       catch (e) { return bad("Server error", 500); }
     }
-    return env.ASSETS.fetch(req);
+    const r = await env.ASSETS.fetch(req);
+    const h = new Headers(r.headers);
+    h.set("Cache-Control", "no-cache, must-revalidate");
+    return new Response(r.body, { status: r.status, statusText: r.statusText, headers: h });
   },
 };
