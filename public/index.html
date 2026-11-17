@@ -381,26 +381,39 @@ function seeded(seed){let h=1779033703^seed.length;for(const c of seed){h=Math.i
   return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296}}
 // Daily rounds walk through each age group's prompts in a fixed shuffled cycle,
 // so nothing repeats until the whole set has been played. Practice is random.
-function cycleTake(list,key,start,count){
-  const n=list.length, out=[];
-  for(let pos=start; out.length<Math.min(count,n); pos++){
-    const cyc=Math.floor(pos/n), rnd=seeded(key+":"+cyc), perm=list.slice();
-    for(let i=n-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[perm[i],perm[j]]=[perm[j],perm[i]]}
-    const p=perm[pos%n]; if(!out.includes(p)) out.push(p);
+// Daily rounds use a "bag": each day takes prompts from the unused bag and the
+// bag only refills once empty (never re-serving what was just taken), so nothing
+// repeats until every prompt has been played. It is replayed from a fixed start
+// day, so every player sees the same round and new prompts join at the next refill.
+const EPOCH_DAY=2; // dayNum() of 2026-11-17
+function bagDays(list,key,upto,n){
+  const rnd=seeded("bag:"+key);
+  const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+  let bag=shuf(list), out=[];
+  for(let d=EPOCH_DAY; d<=upto; d++){
+    const today=[];
+    while(today.length<Math.min(n,list.length)){
+      if(!bag.length){
+        // refill: everything except what is already in today's round, and
+        // put anything newly added to the bank first
+        const recent=list.filter(p=>today.includes(p)||out.includes(p));
+        bag=shuf(list.filter(p=>!recent.includes(p))).concat(shuf(list.filter(p=>out.includes(p)&&!today.includes(p))));
+        if(!bag.length) break;
+      }
+      today.push(bag.shift());
+    }
+    out=today;
   }
   return out;
 }
 function pick(group,seed){
   const sa=BANK[group].filter(p=>p.sa), other=BANK[group].filter(p=>!p.sa);
   const SA_N=3, OTHER_N=ROUND-SA_N;
-  if(!seed){
-    const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-    return shuf(shuf(sa).slice(0,SA_N).concat(shuf(other).slice(0,OTHER_N)));
-  }
-  const day=dayNum(), rnd=seeded(seed);
-  const chosen=cycleTake(sa,"sa:"+group,day*SA_N,SA_N).concat(cycleTake(other,"gen:"+group,day*OTHER_N,OTHER_N));
-  for(let i=chosen.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[chosen[i],chosen[j]]=[chosen[j],chosen[i]]}
-  return chosen;
+  const shuf=(a,r)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+  if(!seed) return shuf(shuf(sa,Math.random).slice(0,SA_N).concat(shuf(other,Math.random).slice(0,OTHER_N)),Math.random);
+  const day=Math.max(dayNum(),EPOCH_DAY);
+  const chosen=bagDays(sa,"sa:"+group,day,SA_N).concat(bagDays(other,"gen:"+group,day,OTHER_N));
+  return shuf(chosen,seeded(seed));
 }
 function show(v){["vAuth","vHome","vGame","vEnd"].forEach(x=>$(x).classList.toggle("hidden",x!==v));window.scrollTo(0,0)}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
